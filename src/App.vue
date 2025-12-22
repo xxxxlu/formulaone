@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import Header from './layout/header.vue';
+import Footer from './layout/footer.vue';
+
 </script>
 
 <template>
+  <Header />
   <router-view></router-view>
+  <Footer />
 </template>
-
+s
 <style lang="scss">
-@import './styles/main.scss';
-
 #app {
   width: 100%;
   height: 100vh;

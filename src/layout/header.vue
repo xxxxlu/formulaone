@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import F1Button from '../components/F1Button.vue'
 import F1Input from '../components/F1Input.vue'
