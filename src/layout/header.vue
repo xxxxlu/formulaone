@@ -56,7 +56,7 @@ const searchQuery = ref('')
 const route = useRoute()
 
 const navItems = [
-  { label: 'Home', path: '/' },
+  { label: 'Home', path: '/home' },
   { label: 'Drivers', path: '/drivers' },
   { label: 'News', path: '/news' },
   { label: 'Teams', path: '/teams' },
@@ -64,7 +64,7 @@ const navItems = [
 ]
 
 const isActive = (path: string) =>
-  path === '/' ? route.path === '/' || route.path.startsWith('/home') : route.path.startsWith(path)
+  path === '/home' ? route.path === '/home' || route.path === '/' : route.path.startsWith(path)
 </script>
 
 <style scoped lang="scss">

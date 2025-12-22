@@ -14,6 +14,7 @@
           <div class="f1-dashboard__right">
             <StandingsSection :standings="standingsDisplay" :maxPoints="maxStandingsPoints" />
             <RacesSection :races="raceResultsDisplay" />
+            <FastestLapsSection :laps="fastestLapsDisplay" />
           </div>
         </section>
       </div>
@@ -38,11 +39,13 @@ import TelemetrySection from '../components/home/TelemetrySection.vue'
 import NewsSection from '../components/home/NewsSection.vue'
 import StandingsSection from '../components/home/StandingsSection.vue'
 import RacesSection from '../components/home/RacesSection.vue'
+import FastestLapsSection from '../components/home/FastestLapsSection.vue'
 import TrackModal from '../components/home/TrackModal.vue'
 import type { RootState, Track } from '../store'
 import { standings2025 as standings2025Data, type DriverStanding } from '../store/data/standings'
 import { raceResults2025, type RaceResult } from '../store/data/race-results-2025'
-import type { CountdownEventWithTs, StandingDisplay, RaceDisplay, CountdownState } from '../components/home/types'
+import { fastestLaps2025, type FastestLapResult } from '../store/data/fastest-laps-2025'
+import type { CountdownEventWithTs, StandingDisplay, RaceDisplay, CountdownState, FastestLapDisplay } from '../components/home/types'
 
 const store = useStore<RootState>()
 
@@ -56,6 +59,24 @@ const defaultTrackImage =
 
 const standings2025 = computed<DriverStanding[]>(() => standings2025Data)
 const raceResults = computed<RaceResult[]>(() => raceResults2025)
+const fastestLaps = computed<FastestLapResult[]>(() => fastestLaps2025)
+
+const teamAliases: Record<string, string> = {
+  ferrari: 'scuderia ferrari',
+  mercedes: 'mercedes-amg',
+  'mercedes-amg petronas': 'mercedes-amg',
+}
+
+const findTeam = (name: string) => {
+  const key = name.toLowerCase()
+  const normalizedName = teamAliases[key] ?? key
+  return (
+    store.state.teams.find((t) => t.name.toLowerCase() === normalizedName) ??
+    store.state.teams.find(
+      (t) => normalizedName.includes(t.name.toLowerCase()) || t.name.toLowerCase().includes(normalizedName)
+    )
+  )
+}
 
 const driverAccents = computed<Record<string, string>>(() =>
   store.state.drivers.reduce<Record<string, string>>((map, d) => {
@@ -75,21 +96,12 @@ const driverAccents = computed<Record<string, string>>(() =>
 const standingsDisplay = computed<StandingDisplay[]>(() =>
   standings2025.value.map((s) => {
     const teamKey = s.team.toLowerCase()
-    const teamAliases: Record<string, string> = {
-      ferrari: 'scuderia ferrari',
-      mercedes: 'mercedes-amg',
-    }
     const driver = store.state.drivers.find(
       (d) =>
         `${d.firstName} ${d.lastName}`.toLowerCase() === s.driver.toLowerCase() ||
         d.lastName.toLowerCase() === s.driver.split(' ').slice(-1)[0].toLowerCase()
     )
-    const normalizedTeamName = teamAliases[teamKey] ?? teamKey
-    const team =
-      store.state.teams.find((t) => t.name.toLowerCase() === normalizedTeamName) ??
-      store.state.teams.find(
-        (t) => normalizedTeamName.includes(t.name.toLowerCase()) || t.name.toLowerCase().includes(normalizedTeamName)
-      )
+    const team = findTeam(teamKey)
     return {
       ...s,
       accent: driverAccents.value[s.driver] || driver?.accent || team?.color,
@@ -102,14 +114,34 @@ const standingsDisplay = computed<StandingDisplay[]>(() =>
 const raceResultsDisplay = computed<RaceDisplay[]>(() =>
   raceResults.value.map((r) => {
     const driver = store.state.drivers.find(
-      (d) => `${d.firstName} ${d.lastName}`.toLowerCase() === r.winner.toLowerCase()
+      (d) =>
+        `${d.firstName} ${d.lastName}`.toLowerCase() === r.winner.toLowerCase() ||
+        d.lastName.toLowerCase() === r.winner.split(' ').slice(-1)[0].toLowerCase()
     )
-    const team = store.state.teams.find((t) => t.name.toLowerCase() === r.car.toLowerCase())
+    const team = findTeam(r.car)
     return {
       ...r,
       winnerAvatar: driver?.image,
       accent: driver?.accent || team?.color,
       teamLogo: team?.logo,
+    }
+  })
+)
+
+const fastestLapsDisplay = computed<FastestLapDisplay[]>(() =>
+  fastestLaps.value.map((lap) => {
+    const driver = store.state.drivers.find(
+      (d) =>
+        `${d.firstName} ${d.lastName}`.toLowerCase() === lap.driver.toLowerCase() ||
+        d.lastName.toLowerCase() === lap.driver.split(' ').slice(-1)[0].toLowerCase()
+    )
+    const team = driver ? findTeam(driver.team) : null
+    return {
+      ...lap,
+      accent: driver?.accent || team?.color,
+      avatar: driver?.image,
+      teamLogo: team?.logo,
+      car: driver?.team ?? team?.name,
     }
   })
 )

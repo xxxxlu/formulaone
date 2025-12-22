@@ -18,44 +18,36 @@
       <div class="f1-countdown">
         <div class="f1-countdown__segment">
           <div class="f1-countdown__value-shell">
-            <transition name="flip">
-              <div :key="countdown.days" class="f1-countdown__value">
-                {{ pad(countdown.days) }}
-              </div>
-            </transition>
+            <div class="f1-countdown__value">
+              {{ pad(countdown.days) }}
+            </div>
           </div>
           <span class="f1-countdown__label">Days</span>
         </div>
         <span class="f1-countdown__sep">:</span>
         <div class="f1-countdown__segment">
           <div class="f1-countdown__value-shell">
-            <transition name="flip">
-              <div :key="countdown.hours" class="f1-countdown__value">
-                {{ pad(countdown.hours) }}
-              </div>
-            </transition>
+            <div class="f1-countdown__value">
+              {{ pad(countdown.hours) }}
+            </div>
           </div>
           <span class="f1-countdown__label">Hrs</span>
         </div>
         <span class="f1-countdown__sep">:</span>
         <div class="f1-countdown__segment">
           <div class="f1-countdown__value-shell">
-            <transition name="flip">
-              <div :key="countdown.minutes" class="f1-countdown__value">
-                {{ pad(countdown.minutes) }}
-              </div>
-            </transition>
+            <div class="f1-countdown__value">
+              {{ pad(countdown.minutes) }}
+            </div>
           </div>
           <span class="f1-countdown__label">Mins</span>
         </div>
         <span class="f1-countdown__sep">:</span>
         <div class="f1-countdown__segment">
           <div class="f1-countdown__value-shell">
-            <transition name="flip">
-              <div :key="countdown.seconds" class="f1-countdown__value" :class="{ 'f1-countdown__value--alert': countdown.total <= 0 }">
-                {{ pad(Math.max(0, countdown.seconds)) }}
-              </div>
-            </transition>
+            <div class="f1-countdown__value" :class="{ 'f1-countdown__value--alert': countdown.total <= 0 }">
+              {{ pad(Math.max(0, countdown.seconds)) }}
+            </div>
           </div>
           <span class="f1-countdown__label">Secs</span>
         </div>
@@ -107,7 +99,7 @@ const pad = (value: number) => value.toString().padStart(2, '0')
 }
 
 .f1-next__panel {
-  padding: 16px;
+  padding: 20px 22px;
   display: grid;
   gap: 12px;
 }
@@ -167,6 +159,9 @@ const pad = (value: number) => value.toString().padStart(2, '0')
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .f1-countdown__segment {
@@ -176,16 +171,17 @@ const pad = (value: number) => value.toString().padStart(2, '0')
 }
 
 .f1-countdown__value-shell {
-  padding: 8px 10px;
+  padding: 20px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  min-width: 56px;
+  text-align: center;
+  min-width: 100px;
 }
 
 .f1-countdown__value {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 24px;
   color: #fff;
 }
 
@@ -195,15 +191,15 @@ const pad = (value: number) => value.toString().padStart(2, '0')
 
 .f1-countdown__label {
   font-family: var(--font-tech);
-  font-size: 10px;
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 
 .f1-countdown__sep {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 22px;
   color: var(--text-muted);
 }
 

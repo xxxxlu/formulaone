@@ -1,14 +1,30 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import Header from './layout/header.vue'
 import Footer from './layout/footer.vue'
+import F1Button from './components/F1Button.vue'
 import { isRouting, setRouting } from './utils/loadingState'
 
 const loading = computed(() => isRouting.value)
+const showBackTop = ref(false)
+
+const handleScroll = () => {
+  showBackTop.value = window.scrollY > 200
+}
+
+const backToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 onMounted(() => {
   // ensure initial entry shows the loader briefly, then release
   setTimeout(() => setRouting(false), 1000)
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  handleScroll()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -54,6 +70,23 @@ onMounted(() => {
     <Header />
     <router-view></router-view>
     <Footer />
+
+    <transition name="fade-up">
+      <div v-if="showBackTop" class="f1-backtop">
+        <F1Button
+          class="f1-backtop__btn"
+          size="lg"
+          square
+          variant="solid"
+          :accent="'var(--neon-blue)'"
+          :accentGlow="'rgba(0,243,255,0.45)'"
+          aria-label="Back to top"
+          @click="backToTop"
+        >
+          <span class="material-symbols-outlined">arrow_upward</span>
+        </F1Button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -150,5 +183,58 @@ onMounted(() => {
   100% {
     clip-path: inset(0 0 100% 0);
   }
+}
+
+.f1-backtop {
+  position: fixed;
+  right: 22px;
+  bottom: 26px;
+  z-index: 1200;
+}
+
+.f1-backtop__btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3), 0 0 12px rgba(0, 243, 255, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.f1-backtop__btn::after {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(0, 243, 255, 0.32), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.f1-backtop__btn:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 243, 255, 0.28);
+}
+
+.f1-backtop__btn:hover::after {
+  opacity: 1;
+}
+
+.f1-backtop__btn .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.fade-up-enter-from,
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
 }
 </style>

@@ -40,3 +40,14 @@ export type RaceDisplay = {
   winnerAvatar?: string
   teamLogo?: string
 }
+
+export type FastestLapDisplay = {
+  round: number
+  grandPrix: string
+  driver: string
+  time: string
+  accent?: string
+  avatar?: string
+  teamLogo?: string
+  car?: string
+}
