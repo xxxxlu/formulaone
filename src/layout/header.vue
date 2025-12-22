@@ -2,13 +2,13 @@
   <header class="f1-header">
     <div class="f1-container f1-header__inner">
       <div class="f1-header__brand">
-        <a class="f1-logo" href="#">
+        <RouterLink class="f1-logo" to="/">
           <img class="f1-logo__img" :src="logo" alt="F1 Logo" />
           <span class="f1-logo__text">
             <span class="f1-logo__title">Telemetry Hub</span>
             <span class="f1-logo__tagline">Official System</span>
           </span>
-        </a>
+        </RouterLink>
         <nav class="f1-nav">
           <RouterLink
             v-for="item in navItems"
@@ -56,14 +56,15 @@ const searchQuery = ref('')
 const route = useRoute()
 
 const navItems = [
-  { label: 'Home', path: '/home' },
+  { label: 'Home', path: '/' },
   { label: 'Drivers', path: '/drivers' },
   { label: 'News', path: '/news' },
   { label: 'Teams', path: '/teams' },
   { label: 'Seasons', path: '/seasons' },
 ]
 
-const isActive = (path: string) => route.path.startsWith(path)
+const isActive = (path: string) =>
+  path === '/' ? route.path === '/' || route.path.startsWith('/home') : route.path.startsWith(path)
 </script>
 
 <style scoped lang="scss">
