@@ -3,13 +3,10 @@
     <div class="f1-container f1-header__inner">
       <div class="f1-header__brand">
         <a class="f1-logo" href="#">
-          <span class="f1-logo__icon">
-            <span class="material-symbols-outlined">speed</span>
-            <span class="f1-logo__glint"></span>
-          </span>
+          <img class="f1-logo__img" :src="logo" alt="F1 Logo" />
           <span class="f1-logo__text">
-            <span class="f1-logo__title">F1<span class="f1-logo__accent">.HUB</span></span>
-            <span class="f1-logo__tagline">Telemetry System</span>
+            <span class="f1-logo__title">Telemetry Hub</span>
+            <span class="f1-logo__tagline">Official System</span>
           </span>
         </a>
         <nav class="f1-nav">
@@ -53,6 +50,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import F1Button from '../components/F1Button.vue'
 import F1Input from '../components/F1Input.vue'
+import logo from '../assets/logo-f1.svg'
 
 const searchQuery = ref('')
 const route = useRoute()
@@ -99,44 +97,10 @@ const isActive = (path: string) => route.path.startsWith(path)
   color: #fff;
 }
 
-.f1-logo__icon {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: var(--shadow-red);
-  overflow: hidden;
-  transition: background 0.2s ease;
-}
-
-.f1-logo__icon .material-symbols-outlined {
-  font-size: 32px;
-  color: var(--neon-red);
-  transition: color 0.2s ease;
-}
-
-.f1-logo__glint {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2));
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.f1-logo:hover .f1-logo__icon {
-  background: var(--neon-red);
-}
-
-.f1-logo:hover .f1-logo__icon .material-symbols-outlined {
-  color: #000;
-}
-
-.f1-logo:hover .f1-logo__glint {
-  opacity: 1;
+.f1-logo__img {
+  height: 28px;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(225, 6, 0, 0.35));
 }
 
 .f1-logo__text {
@@ -150,10 +114,6 @@ const isActive = (path: string) => route.path.startsWith(path)
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.2em;
-}
-
-.f1-logo__accent {
-  color: var(--neon-red);
 }
 
 .f1-logo__tagline {

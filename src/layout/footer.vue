@@ -4,9 +4,9 @@
     <div class="f1-container f1-footer__inner">
       <div class="f1-footer__top">
         <div class="f1-footer__brand">
-          <span class="material-symbols-outlined">speed</span>
+          <img class="f1-footer__logo" :src="logo" alt="F1 logo" />
           <div>
-            <div class="f1-footer__title">F1<span>.HUB</span></div>
+            <div class="f1-footer__title">Telemetry Hub</div>
             <div class="f1-footer__tagline">Official Telemetry Partner</div>
           </div>
         </div>
@@ -35,7 +35,9 @@
   </footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import logo from '../assets/logo-f1.svg'
+</script>
 
 <style scoped lang="scss">
 .f1-footer {
@@ -79,19 +81,16 @@
   font-family: var(--font-display);
 }
 
-.f1-footer__brand .material-symbols-outlined {
-  font-size: 32px;
-  color: var(--neon-red);
+.f1-footer__logo {
+  height: 26px;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(225, 6, 0, 0.35));
 }
 
 .f1-footer__title {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.15em;
-}
-
-.f1-footer__title span {
-  color: var(--neon-red);
 }
 
 .f1-footer__tagline {
