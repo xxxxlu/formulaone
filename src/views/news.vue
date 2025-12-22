@@ -142,14 +142,14 @@ const formatDate = (date: string) => date.replace(/-/g, '.')
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.04));
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  min-height: 160px;
+  min-height: 180px;
   row-gap: 12px;
 }
 
 .f1-news-row__media {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -160,6 +160,7 @@ const formatDate = (date: string) => date.replace(/-/g, '.')
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
 }
 
@@ -226,10 +227,11 @@ const formatDate = (date: string) => date.replace(/-/g, '.')
   .f1-news-row {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
+    gap: 12px;
   }
 
   .f1-news-row__media {
-    max-height: 200px;
+    max-height: 220px;
   }
 }
 

@@ -6,6 +6,8 @@ import { setRouting } from '../utils/loadingState'
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'home', component: Home, alias: ['/home'] },
   { path: '/drivers', name: 'drivers', component: () => import('../views/deivers.vue') },
+  { path: '/teams', name: 'teams', component: () => import('../views/teams.vue') },
+  { path: '/teams/:id', name: 'team-detail', component: () => import('../views/team-detail.vue') },
   { path: '/news', name: 'news', component: () => import('../views/news.vue') },
   { path: '/news/:slug', name: 'news-detail', component: () => import('../views/news-detail.vue') },
   { path: '/:pathMatch(.*)*', redirect: '/' },

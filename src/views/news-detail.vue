@@ -86,8 +86,8 @@ const openSource = () => {
 
 .f1-news-detail__hero {
   position: relative;
-  min-height: 420px;
-  height: clamp(420px, 60vw, 560px);
+  min-height: 360px;
+  height: clamp(380px, 55vw, 540px);
   display: grid;
   align-items: flex-end;
   overflow: hidden;
@@ -108,11 +108,11 @@ const openSource = () => {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 18px;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.02);
   background: #050505;
   filter: saturate(1.05);
-  object-position: center;
 }
 
 .f1-news-detail__hero-overlay {
@@ -148,7 +148,7 @@ const openSource = () => {
 .f1-news-detail__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(26px, 4vw, 40px);
   letter-spacing: 0.05em;
   line-height: 1.1;
 }
@@ -197,6 +197,16 @@ const openSource = () => {
   gap: 14px;
   line-height: 1.8;
   color: #d1d5db;
+}
+
+@media (max-width: 720px) {
+  .f1-news-detail__hero {
+    height: clamp(320px, 65vw, 420px);
+  }
+
+  .f1-news-detail__hero-content {
+    padding: 40px 18px 28px;
+  }
 }
 
 .f1-news-detail__content p {
