@@ -1,5 +1,3 @@
-import type { Track } from '../../store'
-
 export type CountdownEventWithTs = {
   id: string
   name: string

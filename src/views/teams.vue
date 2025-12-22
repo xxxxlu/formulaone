@@ -129,7 +129,7 @@ const seasons = computed(() => {
   return Array.from(unique).sort((a, b) => b.localeCompare(a))
 })
 
-const season = ref<string | null>(null)
+const season = ref<string>(seasons.value[0] ?? '')
 const query = ref('')
 const sortKey = ref<'rank' | 'titles' | 'name'>('rank')
 
@@ -145,10 +145,6 @@ const sortOptions = [
   { label: 'Titles', value: 'titles' },
   { label: 'Name (A-Z)', value: 'name' },
 ]
-
-if (!season.value && seasons.value.length) {
-  season.value = seasons.value[0]
-}
 
 const filteredTeams = computed(() => {
   const q = query.value.trim().toLowerCase()

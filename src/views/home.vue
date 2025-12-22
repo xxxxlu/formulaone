@@ -99,7 +99,7 @@ const standingsDisplay = computed<StandingDisplay[]>(() =>
     const driver = store.state.drivers.find(
       (d) =>
         `${d.firstName} ${d.lastName}`.toLowerCase() === s.driver.toLowerCase() ||
-        d.lastName.toLowerCase() === s.driver.split(' ').slice(-1)[0].toLowerCase()
+        d.lastName.toLowerCase() === (s.driver?.split(' ').slice(-1)[0] ?? '').toLowerCase()
     )
     const team = findTeam(teamKey)
     return {
@@ -116,7 +116,7 @@ const raceResultsDisplay = computed<RaceDisplay[]>(() =>
     const driver = store.state.drivers.find(
       (d) =>
         `${d.firstName} ${d.lastName}`.toLowerCase() === r.winner.toLowerCase() ||
-        d.lastName.toLowerCase() === r.winner.split(' ').slice(-1)[0].toLowerCase()
+        d.lastName.toLowerCase() === (r.winner?.split(' ').slice(-1)[0] ?? '').toLowerCase()
     )
     const team = findTeam(r.car)
     return {
@@ -133,7 +133,7 @@ const fastestLapsDisplay = computed<FastestLapDisplay[]>(() =>
     const driver = store.state.drivers.find(
       (d) =>
         `${d.firstName} ${d.lastName}`.toLowerCase() === lap.driver.toLowerCase() ||
-        d.lastName.toLowerCase() === lap.driver.split(' ').slice(-1)[0].toLowerCase()
+        d.lastName.toLowerCase() === (lap.driver?.split(' ').slice(-1)[0] ?? '').toLowerCase()
     )
     const team = driver ? findTeam(driver.team) : null
     return {

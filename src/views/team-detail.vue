@@ -154,7 +154,6 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import F1Button from '../components/F1Button.vue'
 import type { RootState, Team, NewsItem } from '../store'
 
 const route = useRoute()
@@ -213,7 +212,8 @@ const ordinal = (n: number | undefined) => {
   if (!n) return '—'
   const s = ['th', 'st', 'nd', 'rd']
   const v = n % 100
-  return n + (s[(v - 20) % 10] || s[v] || s[0])
+  const suffix = s[(v - 20) % 10] ?? s[v] ?? s[0]
+  return `${n}${suffix}`
 }
 </script>
 

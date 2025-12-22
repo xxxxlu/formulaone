@@ -4,7 +4,7 @@ import { teams } from './data/teams'
 import { tracks } from './data/tracks'
 import calendar from './data/calendar'
 import { news } from './data/news'
-import type { RootState, Driver, Team, Track, RaceEvent, NewsItem } from './types'
+import type { RootState } from './types'
 
 export type { DriverStatus, Driver, Team, Track, RaceEvent, NewsItem, RootState } from './types'
 
