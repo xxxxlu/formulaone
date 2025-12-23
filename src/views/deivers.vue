@@ -48,13 +48,17 @@
       </section>
 
       <section class="drivers-grid">
-        <RouterLink
+        <div
           v-for="driver in pagedDrivers"
           :key="driver.id"
           class="driver-card"
           :class="{ 'driver-card--legend': driver.status === 'legend' }"
           :style="cardStyle(driver)"
-          :to="`/drivers/${driver.id}`"
+          role="button"
+          tabindex="0"
+          :aria-disabled="driver.status === 'legend'"
+          @click.prevent.stop="handleCardClick(driver)"
+          @keydown.enter.prevent.stop="handleCardClick(driver)"
         >
           <div class="driver-card__glow"></div>
           <span v-if="driver.badge" class="driver-card__badge">{{ driver.badge }}</span>
@@ -131,7 +135,7 @@
             </div>
           </div>
           <span class="driver-card__corner"></span>
-        </RouterLink>
+        </div>
       </section>
 
       <section v-if="pageCount > 1" class="drivers-pagination">
@@ -171,15 +175,18 @@
         </div>
       </section>
     </div>
+    <TopTip :open="tipOpen" :message="tipMessage" />
   </main>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import F1Button from '../components/F1Button.vue'
 import F1Select from '../components/F1Select.vue'
+import TopTip from '../components/TopTip.vue'
 import type { Driver, RootState } from '../store'
 
 type FilterKey = 'all' | 'active' | 'champions' | 'legends'
@@ -201,12 +208,16 @@ const sortOptions = computed<Array<{ label: string; value: SortKey }>>(() => [
   { label: t('drivers.sortWins'), value: 'wins' },
 ])
 
+const router = useRouter()
 const store = useStore<RootState>()
 const activeFilter = ref<FilterKey>('all')
 const sortKey = ref<SortKey>('championships')
 const currentPage = ref(1)
 const pageSize = 12
 const championshipSlots = 7
+const tipOpen = ref(false)
+const tipMessage = ref('')
+let tipTimer: number | null = null
 
 const drivers = computed(() => store.state.drivers)
 
@@ -283,6 +294,25 @@ const cardStyle = (driver: Driver) => ({
   '--badge-color': driver.badgeColor ?? driver.accent,
   '--badge-text': driver.badgeText ?? '#000',
 }) as Record<string, string>
+
+const showLegendTip = () => {
+  tipMessage.value = t('drivers.legendTip')
+  tipOpen.value = true
+  if (tipTimer) {
+    window.clearTimeout(tipTimer)
+  }
+  tipTimer = window.setTimeout(() => {
+    tipOpen.value = false
+  }, 2600)
+}
+
+const handleCardClick = (driver: Driver) => {
+  if (driver.status === 'legend') {
+    showLegendTip()
+    return
+  }
+  router.push(`/drivers/${driver.id}`)
+}
 </script>
 
 <style scoped lang="scss">

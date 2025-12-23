@@ -162,7 +162,7 @@
     "breadcrumbRoster": "Roster",
     "titlePrefix": "Grid",
     "titleStrong": "Drivers",
-    "subtitle": "Official roster 2024 / Historical legends database",
+    "subtitle": "Official roster 2025 / Historical legends database",
     "systemOnline": "System Online",
     "export": "Extract Data",
     "sortLabel": "Sort By",
@@ -180,7 +180,8 @@
     "cardStatusEternal": "Eternal",
     "cardStatusActive": "Active",
     "cardId": "ID",
-    "present": "PRESENT"
+    "present": "PRESENT",
+    "legendTip": "This legend profile is not available."
   },
   "footer": {
     "title": "Telemetry Hub",

@@ -162,7 +162,7 @@
     "breadcrumbRoster": "车手名单",
     "titlePrefix": "车手",
     "titleStrong": "阵容",
-    "subtitle": "2024 现役名单 / 历史传奇数据库",
+    "subtitle": "2025 现役名单 / 历史传奇数据库",
     "systemOnline": "系统在线",
     "export": "导出数据",
     "sortLabel": "排序方式",
@@ -180,7 +180,8 @@
     "cardStatusEternal": "传奇",
     "cardStatusActive": "现役",
     "cardId": "编号",
-    "present": "至今"
+    "present": "至今",
+    "legendTip": "传奇车手档案暂不提供查看。"
   },
   "footer": {
     "title": "遥测中心",
