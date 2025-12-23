@@ -25,7 +25,7 @@
         </nav>
       </div>
       <div class="f1-header__actions">
-        <F1Button class="f1-menu-button" size="sm" square type="button" aria-label="Open menu">
+        <F1Button class="f1-menu-button" size="sm" square type="button" aria-label="Open menu" @click="toggleMobile">
           <span class="material-symbols-outlined">menu</span>
         </F1Button>
         <div class="f1-actions">
@@ -41,12 +41,49 @@
           </F1Button>
         </div>
       </div>
+      <F1Button
+        class="f1-menu-button f1-menu-button--inline"
+        size="sm"
+        square
+        type="button"
+        aria-label="Open menu"
+        @click="toggleMobile"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </F1Button>
     </div>
+
+    <transition name="f1-drawer">
+      <div v-if="mobileOpen" class="f1-mobile-drawer" role="dialog" aria-modal="true">
+        <div class="f1-mobile-drawer__header">
+          <div class="f1-mobile-drawer__title">Menu</div>
+          <F1Button size="sm" square aria-label="Close menu" @click="closeMobile">
+            <span class="material-symbols-outlined">close</span>
+          </F1Button>
+        </div>
+        <nav class="f1-mobile-drawer__nav">
+          <RouterLink
+            v-for="item in navItems"
+            :key="item.path"
+            :to="item.path"
+            class="f1-mobile-link"
+            :class="{ 'is-active': isActive(item.path) }"
+            @click="closeMobile"
+          >
+            <span>{{ item.label }}</span>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </RouterLink>
+        </nav>
+      </div>
+    </transition>
+    <transition name="f1-fade">
+      <div v-if="mobileOpen" class="f1-mobile-backdrop" @click="closeMobile"></div>
+    </transition>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import F1Button from '../components/F1Button.vue'
 import F1Input from '../components/F1Input.vue'
@@ -54,6 +91,7 @@ import logo from '../assets/logo-f1.svg'
 
 const searchQuery = ref('')
 const route = useRoute()
+const mobileOpen = ref(false)
 
 const navItems = [
   { label: 'Home', path: '/home' },
@@ -65,17 +103,32 @@ const navItems = [
 
 const isActive = (path: string) =>
   path === '/home' ? route.path === '/home' || route.path === '/' : route.path.startsWith(path)
+
+const toggleMobile = () => {
+  mobileOpen.value = !mobileOpen.value
+}
+
+const closeMobile = () => {
+  mobileOpen.value = false
+}
+
+watch(
+  () => route.path,
+  () => {
+    closeMobile()
+  }
+)
 </script>
 
 <style scoped lang="scss">
 .f1-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 40;
   padding: 16px 24px;
-  background: rgba(5, 5, 5, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
+  background: #0a0a12;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
 }
 
 .f1-header__inner {
@@ -287,6 +340,10 @@ const isActive = (path: string) =>
   --f1-button-border: rgba(255, 255, 255, 0.1);
   --f1-button-text: #fff;
 }
+.f1-menu-button--inline {
+  display: none;
+  z-index: 60;
+}
 
 :deep(.f1-search) {
   --f1-control-bg: rgba(0, 0, 0, 0.45);
@@ -320,5 +377,162 @@ const isActive = (path: string) =>
   :deep(.f1-menu-button) {
     display: none;
   }
+}
+
+@media (max-width: 1024px) {
+  .f1-header {
+    padding: 12px 18px;
+  }
+
+  .f1-header__inner {
+    gap: 12px;
+  }
+
+  .f1-header__brand {
+    gap: 18px;
+  }
+
+  .f1-logo__img {
+    height: 24px;
+  }
+
+  .f1-logo__title {
+    font-size: 18px;
+    letter-spacing: 0.16em;
+  }
+
+  .f1-logo__tagline {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+  }
+
+  .f1-nav__link {
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+  }
+
+  .f1-actions {
+    display: flex;
+  }
+
+  :deep(.f1-search .f1-input__control) {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .f1-header {
+    padding: 10px 14px;
+  }
+
+  .f1-header__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .f1-header__brand {
+    gap: 12px;
+  }
+
+  .f1-nav {
+    display: none;
+  }
+
+  .f1-header__actions {
+    display: none;
+  }
+
+  .f1-menu-button--inline {
+    display: inline-flex;
+  }
+}
+
+.f1-mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 80;
+}
+
+.f1-mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(320px, 80vw);
+  height: 100vh;
+  background: rgba(10, 10, 15, 0.96);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: -12px 0 24px rgba(0, 0, 0, 0.35);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+
+.f1-mobile-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.f1-mobile-drawer__title {
+  font-family: var(--font-display);
+  letter-spacing: 0.2em;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.f1-mobile-drawer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.f1-mobile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.f1-mobile-link:hover,
+.f1-mobile-link.is-active {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.f1-fade-enter-active,
+.f1-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.f1-fade-enter-from,
+.f1-fade-leave-to {
+  opacity: 0;
+}
+
+.f1-drawer-enter-active,
+.f1-drawer-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.f1-drawer-enter-from,
+.f1-drawer-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

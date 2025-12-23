@@ -24,6 +24,13 @@ export interface Driver {
   badgeText?: string
 }
 
+export interface DriverProfile {
+  slug: string
+  season: Record<string, string>
+  career: Record<string, string>
+  bio: { birthDate: string; birthPlace: string }
+}
+
 export interface Track {
   id: string
   name: string
@@ -90,6 +97,7 @@ export interface NewsItem {
 
 export interface RootState {
   drivers: Driver[]
+  driverProfiles: Record<string, DriverProfile>
   teams: Team[]
   tracks: Track[]
   calendar: RaceEvent[]

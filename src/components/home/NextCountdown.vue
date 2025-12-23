@@ -171,12 +171,12 @@ const pad = (value: number) => value.toString().padStart(2, '0')
 }
 
 .f1-countdown__value-shell {
-  padding: 20px;
+  padding: 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   text-align: center;
-  min-width: 100px;
+  min-width: 88px;
 }
 
 .f1-countdown__value {
@@ -275,6 +275,50 @@ const pad = (value: number) => value.toString().padStart(2, '0')
   .f1-next__panel--countdown {
     border-bottom: none;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 768px) {
+  .f1-next__panel {
+    padding: 14px 12px;
+  }
+
+  .f1-countdown {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .f1-countdown__segment {
+    gap: 2px;
+  }
+
+  .f1-countdown__value-shell {
+    min-width: 68px;
+    padding: 12px;
+  }
+
+  .f1-countdown__value {
+    font-size: 20px;
+  }
+
+  .f1-countdown__label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
+  .f1-countdown__sep {
+    font-size: 16px;
+  }
+
+  .f1-next__panel--weather {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .f1-weather__divider {
+    width: 100%;
+    height: 1px;
   }
 }
 </style>

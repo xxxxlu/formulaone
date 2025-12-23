@@ -1,16 +1,17 @@
 import { createStore } from 'vuex'
 import drivers from './data/drivers'
+import { driverProfiles } from './data/driverProfiles'
 import { teams } from './data/teams'
 import { tracks } from './data/tracks'
 import calendar from './data/calendar'
 import { news } from './data/news'
 import type { RootState } from './types'
-
-export type { DriverStatus, Driver, Team, Track, RaceEvent, NewsItem, RootState } from './types'
+export type { DriverStatus, Driver, DriverProfile, Team, Track, RaceEvent, NewsItem, RootState } from './types'
 
 export default createStore<RootState>({
   state: {
     drivers,
+    driverProfiles,
     teams,
     tracks,
     calendar,
@@ -22,6 +23,7 @@ export default createStore<RootState>({
     legendDrivers: (state: RootState) => state.drivers.filter((driver) => driver.status === 'legend'),
     championDrivers: (state: RootState) => state.drivers.filter((driver) => driver.championships > 0),
     driverById: (state: RootState) => (id: string) => state.drivers.find((driver) => driver.id === id),
+    driverProfileById: (state: RootState) => (id: string) => state.driverProfiles[id] ?? null,
 
     teams: (state: RootState) => state.teams,
     teamsBySeason: (state: RootState) => (season: string) =>

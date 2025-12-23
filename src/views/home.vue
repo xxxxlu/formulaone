@@ -258,4 +258,23 @@ onBeforeUnmount(() => {
     align-items: start;
   }
 }
+
+@media (max-width: 768px) {
+  .f1-main {
+    padding: 0 12px 70px;
+    margin-top: -20px;
+  }
+
+  .f1-main__inner {
+    gap: 20px;
+  }
+
+  .f1-dashboard {
+    gap: 20px;
+  }
+
+  .f1-card {
+    border-radius: 10px;
+  }
+}
 </style>

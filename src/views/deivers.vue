@@ -48,12 +48,13 @@
       </section>
 
       <section class="drivers-grid">
-        <article
+        <RouterLink
           v-for="driver in pagedDrivers"
           :key="driver.id"
           class="driver-card"
           :class="{ 'driver-card--legend': driver.status === 'legend' }"
           :style="cardStyle(driver)"
+          :to="`/drivers/${driver.id}`"
         >
           <div class="driver-card__glow"></div>
           <span v-if="driver.badge" class="driver-card__badge">{{ driver.badge }}</span>
@@ -130,7 +131,7 @@
             </div>
           </div>
           <span class="driver-card__corner"></span>
-        </article>
+        </RouterLink>
       </section>
 
       <section v-if="pageCount > 1" class="drivers-pagination">

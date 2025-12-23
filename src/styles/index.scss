@@ -167,4 +167,19 @@ input {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 1200px) {
+  .f1-container {
+    padding: 0 18px;
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .f1-container {
+    padding: 0 14px;
+    max-width: 100%;
+  }
 }
