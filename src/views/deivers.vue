@@ -188,7 +188,7 @@ type SortKey = 'championships' | 'name' | 'wins'
 
 const { t } = useI18n()
 
-const filters = computed(() => [
+const filters = computed<{ key: FilterKey; label: string }[]>(() => [
   { key: 'all', label: t('drivers.filterAll') },
   { key: 'active', label: t('drivers.filterActive') },
   { key: 'champions', label: t('drivers.filterChampions') },

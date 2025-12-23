@@ -153,10 +153,6 @@ const openLogin = () => {
   showLogin.value = true
 }
 
-const closeLogin = () => {
-  showLogin.value = false
-}
-
 const submitLogin = async (payload: { email: string; password: string }) => {
   try {
     await login(payload.email, payload.password)
