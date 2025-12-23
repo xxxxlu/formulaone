@@ -3,8 +3,9 @@ import './styles/index.scss'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { i18n } from './locales'
 
-createApp(App).use(router).use(store).mount('#app')
+createApp(App).use(router).use(store).use(i18n).mount('#app')
 
 console.log(
   '%cFORMULA 1',

@@ -4,24 +4,24 @@
       <div class="drivers-breadcrumb">
         <a href="#">
           <span class="material-symbols-outlined">grid_view</span>
-          HUB
+          {{ $t('drivers.breadcrumbHub') }}
         </a>
         <span>/</span>
-        <span>Roster</span>
+        <span>{{ $t('drivers.breadcrumbRoster') }}</span>
       </div>
 
       <section class="drivers-header">
         <div>
           <h1 class="drivers-title">
-            <span>Grid</span> <strong>Drivers</strong>
+            <span>{{ $t('drivers.titlePrefix') }}</span> <strong>{{ $t('drivers.titleStrong') }}</strong>
           </h1>
-          <p class="drivers-subtitle">Official roster 2024 / Historical legends database</p>
+          <p class="drivers-subtitle">{{ $t('drivers.subtitle') }}</p>
         </div>
         <div class="drivers-actions">
-          <div class="drivers-status">System Online</div>
+          <div class="drivers-status">{{ $t('drivers.systemOnline') }}</div>
           <F1Button class="drivers-export" variant="outline" type="button">
             <span class="material-symbols-outlined">download</span>
-            Extract Data
+            {{ $t('drivers.export') }}
           </F1Button>
         </div>
       </section>
@@ -42,7 +42,7 @@
           </F1Button>
         </div>
         <div class="drivers-sort">
-          <label for="driver-sort">Filter By:</label>
+          <label for="driver-sort">{{ $t('drivers.sortLabel') }}</label>
           <F1Select id="driver-sort" v-model="sortKey" :options="sortOptions" />
         </div>
       </section>
@@ -64,7 +64,7 @@
               <span class="material-symbols-outlined">{{ driver.icon }}</span>
             </div>
             <div class="driver-card__id">
-              <span>ID: {{ driver.code }}</span>
+              <span>{{ $t('drivers.cardId') }}: {{ driver.code }}</span>
               <div class="driver-card__id-bar"></div>
             </div>
             <div class="driver-card__number">{{ driver.number }}</div>
@@ -97,7 +97,7 @@
             <div class="driver-card__stats">
               <div class="driver-card__championships">
                 <div class="driver-card__stat-row">
-                  <span>World Championships</span>
+                  <span>{{ $t('drivers.cardWorldChampionships') }}</span>
                   <strong>{{ formatChampionships(driver) }}</strong>
                 </div>
                 <div class="driver-card__bars">
@@ -114,7 +114,7 @@
                 <span class="driver-card__value">{{ formatYears(driver) }}</span>
               </div>
               <div class="driver-card__stat driver-card__stat--status">
-                <span>Status</span>
+                <span>{{ $t('drivers.cardStatus') }}</span>
                 <div
                   class="driver-card__status"
                   :class="
@@ -176,6 +176,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import F1Button from '../components/F1Button.vue'
 import F1Select from '../components/F1Select.vue'
@@ -185,18 +186,20 @@ type FilterKey = 'all' | 'active' | 'champions' | 'legends'
 
 type SortKey = 'championships' | 'name' | 'wins'
 
-const filters = [
-  { key: 'all', label: 'All Drivers' },
-  { key: 'active', label: 'Active Grid' },
-  { key: 'champions', label: 'Champions' },
-  { key: 'legends', label: 'Legends' },
-] as const
+const { t } = useI18n()
 
-const sortOptions: Array<{ label: string; value: SortKey }> = [
-  { label: 'Championships', value: 'championships' },
-  { label: 'Name (A-Z)', value: 'name' },
-  { label: 'Wins', value: 'wins' },
-]
+const filters = computed(() => [
+  { key: 'all', label: t('drivers.filterAll') },
+  { key: 'active', label: t('drivers.filterActive') },
+  { key: 'champions', label: t('drivers.filterChampions') },
+  { key: 'legends', label: t('drivers.filterLegends') },
+])
+
+const sortOptions = computed<Array<{ label: string; value: SortKey }>>(() => [
+  { label: t('drivers.sortChampionships'), value: 'championships' },
+  { label: t('drivers.sortName'), value: 'name' },
+  { label: t('drivers.sortWins'), value: 'wins' },
+])
 
 const store = useStore<RootState>()
 const activeFilter = ref<FilterKey>('all')
@@ -262,11 +265,11 @@ const nextPage = () => {
 }
 
 const formatYears = (driver: Driver) =>
-  driver.endYear ? `${driver.startYear}-${driver.endYear}` : `${driver.startYear}-PRESENT`
+  driver.endYear ? `${driver.startYear}-${driver.endYear}` : `${driver.startYear}-${t('drivers.present')}`
 
-const yearsLabel = (driver: Driver) => (driver.status === 'legend' ? 'Career Years' : 'Active Years')
+const yearsLabel = (driver: Driver) => (driver.status === 'legend' ? t('drivers.cardCareerYears') : t('drivers.cardActiveYears'))
 
-const statusLabel = (driver: Driver) => (driver.status === 'legend' ? 'Eternal' : 'Active')
+const statusLabel = (driver: Driver) => (driver.status === 'legend' ? t('drivers.cardStatusEternal') : t('drivers.cardStatusActive'))
 
 const initials = (driver: Driver) => `${driver.firstName[0]}${driver.lastName[0]}`
 

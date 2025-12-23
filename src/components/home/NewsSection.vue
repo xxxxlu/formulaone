@@ -19,7 +19,7 @@
     </article>
     <div class="f1-news__more">
       <F1Button variant="ghost" size="sm" :accent="'var(--neon-blue)'" :textColor="'#fff'" to="/news">
-        More News
+        {{ $t('home.moreNews') }}
       </F1Button>
     </div>
   </div>

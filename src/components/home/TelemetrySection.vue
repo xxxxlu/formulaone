@@ -2,7 +2,7 @@
   <div class="f1-telemetry f1-card">
     <div class="f1-telemetry__header">
       <h3>
-        CIRCUIT TELEMETRY
+        {{ $t('tracks.title') }}
         <span>{{ activeTrack?.name || 'V.2.0' }}</span>
       </h3>
       <F1Button
@@ -12,7 +12,7 @@
         square
         transparent
         type="button"
-        aria-label="Expand telemetry"
+        :aria-label="$t('tracks.expandTelemetry')"
         @click="$emit('openTrack')"
       >
         <span class="material-symbols-outlined">fullscreen</span>
@@ -21,11 +21,11 @@
     <div class="f1-telemetry__map">
       <div class="f1-telemetry__grid"></div>
       <div class="f1-telemetry__glow"></div>
-      <img :src="activeTrack?.image || defaultTrackImage" :alt="activeTrack?.name || 'Circuit Map'" />
+      <img :src="activeTrack?.image || defaultTrackImage" :alt="activeTrack?.name || $t('tracks.circuitMap')" />
       <div class="f1-telemetry__marker">
         <span class="f1-telemetry__pulse"></span>
         <span class="f1-telemetry__dot"></span>
-        <span class="f1-telemetry__tooltip">SEC 1: 28.4s</span>
+        <span class="f1-telemetry__tooltip">{{ $t('tracks.sectorSample', { section: 1, time: '28.4s' }) }}</span>
       </div>
     </div>
     <div v-if="activeTrack" class="f1-telemetry__tagline">
@@ -36,7 +36,7 @@
       <div class="f1-telemetry__meta">
         <span class="f1-telemetry__meta-item">
           <span class="material-symbols-outlined">straight</span>
-          {{ activeTrack.lengthKm }} km
+          {{ activeTrack.lengthKm }} {{ $t('tracks.kmUnit') }}
         </span>
         <span class="f1-telemetry__meta-item">
           <span class="material-symbols-outlined">flag</span>
@@ -46,15 +46,15 @@
     </div>
     <div class="f1-telemetry__metrics">
       <div class="f1-telemetry__metric">
-        <span>Length</span>
-        <strong>{{ activeTrack?.lengthKm || '--' }} <span>km</span></strong>
+        <span>{{ $t('tracks.lengthLabel') }}</span>
+        <strong>{{ activeTrack?.lengthKm || '--' }} <span>{{ $t('tracks.kmUnit') }}</span></strong>
       </div>
       <div class="f1-telemetry__metric">
-        <span>Lap Record</span>
+        <span>{{ $t('tracks.lapRecord') }}</span>
         <strong class="text-glow-blue">1:21.046</strong>
       </div>
       <div class="f1-telemetry__metric">
-        <span>DRS Zones</span>
+        <span>{{ $t('tracks.drsZones') }}</span>
         <strong>2</strong>
       </div>
     </div>

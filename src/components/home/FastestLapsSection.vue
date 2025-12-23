@@ -1,20 +1,20 @@
 <template>
   <div class="f1-fastlaps f1-card">
     <div class="f1-fastlaps__header">
-      <h4>2025 Fastest Laps</h4>
-      <a href="https://www.formula1.com/en/results/2025/awards/fastest-laps" target="_blank" rel="noreferrer">formula1.com</a>
+      <h4>{{ $t('home.fastestLapsTitle') }}</h4>
+      <a href="https://www.formula1.com/en/results/2025/awards/fastest-laps" target="_blank" rel="noreferrer">{{ $t('home.officialSite') }}</a>
     </div>
 
     <div class="f1-fastlaps__list">
       <div v-for="lap in laps" :key="lap.round" class="f1-fastlap" :style="{ '--lap-accent': lap.accent || 'var(--neon-pink)' }">
-        <div class="f1-fastlap__round">Rd {{ lap.round.toString().padStart(2, '0') }}</div>
+        <div class="f1-fastlap__round">{{ $t('home.roundLabel', { round: lap.round.toString().padStart(2, '0') }) }}</div>
         <span class="f1-fastlap__avatar" :style="{ background: lap.accent ? lap.accent + '30' : 'rgba(255,255,255,0.08)' }">
           <img v-if="lap.avatar" :src="lap.avatar" :alt="lap.driver" loading="lazy" />
         </span>
         <div class="f1-fastlap__body">
-          <div class="f1-fastlap__gp">{{ lap.grandPrix }} GP</div>
+          <div class="f1-fastlap__gp">{{ lap.grandPrix }} {{ $t('home.gp') }}</div>
           <div class="f1-fastlap__meta">
-            <span>{{ lap.car || '—' }}</span>
+            <span>{{ lap.car || $t('home.notAvailable') }}</span>
           </div>
           <div class="f1-fastlap__driver">
             <span>{{ lap.driver }}</span>

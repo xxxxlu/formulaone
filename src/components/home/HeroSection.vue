@@ -4,28 +4,25 @@
       <div class="f1-hero__content">
         <div class="f1-hero__status">
           <span class="f1-hero__status-dot"></span>
-          <span class="f1-hero__status-text">2025 World Champion // Norris Live Feed</span>
+          <span class="f1-hero__status-text">{{ $t('home.heroStatus') }}</span>
         </div>
         <h1 class="f1-hero__title">
-          LANDO
+          {{ $t('home.heroName') }}
           <br />
-          <span class="f1-hero__velocity text-glow-blue">NORRIS</span>
+          <span class="f1-hero__velocity text-glow-blue">{{ $t('home.heroSurname') }}</span>
           <br />
-          <span class="f1-hero__subtitle">WORLD CHAMPION 2025</span>
+          <span class="f1-hero__subtitle">{{ $t('home.heroSubtitleLine') }}</span>
         </h1>
         <div class="f1-hero__accent"></div>
-        <p class="f1-hero__lead">
-          A title season built on relentless pace, clean execution, and a McLaren package that stayed ice-cool under
-          pressure. Relive the decisive laps, data traces, and moments that sealed the crown.
-        </p>
+        <p class="f1-hero__lead">{{ $t('home.heroLead') }}</p>
         <div class="f1-hero__actions">
           <F1Button class="f1-hero__primary" variant="solid" size="lg" :accent="'var(--neon-blue)'" :textColor="'#000'">
-            Watch Title Run
+            {{ $t('home.heroCtaPrimary') }}
             <span class="material-symbols-outlined f1-hero__cta-icon">arrow_forward</span>
           </F1Button>
           <F1Button class="f1-hero__ghost" variant="ghost" size="lg" :accent="'var(--neon-red)'">
             <span class="material-symbols-outlined f1-hero__cta-icon f1-hero__cta-icon--red">play_circle</span>
-            Norris Story
+            {{ $t('home.heroCtaSecondary') }}
           </F1Button>
         </div>
       </div>
@@ -42,14 +39,14 @@
               <div class="f1-hero-card__grid"></div>
               <div class="f1-hero-card__scan"></div>
               <div class="f1-hero-card__stat f1-hero-card__stat--left">
-                <span class="f1-stat__label">AERO LOAD</span>
+                <span class="f1-stat__label">{{ $t('home.heroStatAero') }}</span>
                 <span class="f1-stat__value">12,450 <span class="f1-stat__unit">N</span></span>
               </div>
               <div class="f1-hero-card__stat f1-hero-card__stat--right">
-                <span class="f1-stat__label">DRS STATUS</span>
+                <span class="f1-stat__label">{{ $t('home.heroStatDrs') }}</span>
                 <span class="f1-stat__value">
                   <span class="f1-stat__dot"></span>
-                  CLOSED
+                  {{ $t('home.heroDrsClosed') }}
                 </span>
               </div>
             </div>

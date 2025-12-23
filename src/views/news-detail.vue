@@ -15,7 +15,7 @@
         <div class="f1-news-detail__actions">
           <F1Button variant="ghost" size="sm" :accent="'var(--neon-blue)'" @click="goBack">
             <span class="material-symbols-outlined">arrow_back</span>
-            Back
+            {{ $t('news.back') }}
           </F1Button>
           <F1Button
             variant="ghost"
@@ -25,7 +25,7 @@
             @click="openSource"
           >
             <span class="material-symbols-outlined">open_in_new</span>
-            原文
+            {{ $t('news.source') }}
           </F1Button>
         </div>
       </div>
@@ -39,9 +39,9 @@
     </div>
 
     <div class="f1-container f1-news-detail__body" v-else>
-      <p class="f1-news-detail__missing">新闻不存在或已下线。</p>
+      <p class="f1-news-detail__missing">{{ $t('news.notfound') }}</p>
       <F1Button variant="solid" size="sm" :accent="'var(--neon-blue)'" :textColor="'#000'" @click="goBack">
-        返回
+        {{ $t('news.back') }}
       </F1Button>
     </div>
   </div>

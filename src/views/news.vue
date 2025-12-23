@@ -2,9 +2,9 @@
   <div class="f1-news-page">
     <div class="f1-container f1-news-page__header">
       <div>
-        <p class="f1-news-page__eyebrow">Latest</p>
-        <h1 class="f1-news-page__title">F1 News</h1>
-        <p class="f1-news-page__lead">官方最新报道，按标签快速筛选。</p>
+        <p class="f1-news-page__eyebrow">{{ $t('news.title') }}</p>
+        <h1 class="f1-news-page__title">{{ $t('news.title') }}</h1>
+        <p class="f1-news-page__lead">{{ $t('news.lead') }}</p>
       </div>
       <div class="f1-news-page__filters">
         <button
@@ -15,7 +15,7 @@
           type="button"
           @click="activeTag = pill"
         >
-          {{ pill }}
+          {{ pill === 'All' ? $t('news.filterAll') : pill }}
         </button>
       </div>
     </div>

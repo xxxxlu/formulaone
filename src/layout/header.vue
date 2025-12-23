@@ -5,8 +5,8 @@
         <RouterLink class="f1-logo" to="/">
           <img class="f1-logo__img" :src="logo" alt="F1 Logo" />
           <span class="f1-logo__text">
-            <span class="f1-logo__title">Telemetry Hub</span>
-            <span class="f1-logo__tagline">Official System</span>
+            <span class="f1-logo__title">{{ $t('header.brandTitle') }}</span>
+            <span class="f1-logo__tagline">{{ $t('header.brandTagline') }}</span>
           </span>
         </RouterLink>
         <nav class="f1-nav">
@@ -21,7 +21,7 @@
             <span class="material-symbols-outlined f1-nav__car" aria-hidden="true">sports_motorsports</span>
             <span class="f1-nav__trail" aria-hidden="true"></span>
           </RouterLink>
-          <RouterLink class="f1-nav__cta" to="#">Live Data</RouterLink>
+          <RouterLink class="f1-nav__cta" to="#">{{ $t('header.liveData') }}</RouterLink>
         </nav>
       </div>
       <div class="f1-header__actions">
@@ -29,16 +29,33 @@
           <span class="material-symbols-outlined">menu</span>
         </F1Button>
         <div class="f1-actions">
-          <F1Input v-model="searchQuery" class="f1-search" icon="search" placeholder="SEARCH DATABASE..." />
-          <F1Button
-            class="f1-access"
-            variant="solid"
-            :accent="'var(--neon-red)'"
-            :textColor="'#000'"
-            type="button"
-          >
-            Access ID
-          </F1Button>
+          <F1Input v-model="searchQuery" class="f1-search" icon="search" :placeholder="t('header.search')" />
+          <div class="f1-locale">
+            <button :class="{ active: locale === 'en' || locale === 'en-US' }" type="button" @click="changeLocale('en')">
+              EN
+            </button>
+            <button :class="{ active: locale === 'zh' }" type="button" @click="changeLocale('zh')">
+              中
+            </button>
+          </div>
+          <template v-if="authEnabled && !isAuthenticated">
+            <F1Button
+              class="f1-access"
+              variant="solid"
+              :accent="'var(--neon-red)'"
+              :textColor="'#000'"
+              type="button"
+              @click="openLogin"
+            >
+              {{ t('header.login') }}
+            </F1Button>
+          </template>
+          <template v-else-if="authEnabled">
+            <div class="f1-user">
+              <span class="f1-user__name">{{ session?.name || session?.email }}</span>
+              <button class="f1-user__logout" type="button" @click="logout">{{ t('header.logout') }}</button>
+            </div>
+          </template>
         </div>
       </div>
       <F1Button
@@ -79,27 +96,47 @@
     <transition name="f1-fade">
       <div v-if="mobileOpen" class="f1-mobile-backdrop" @click="closeMobile"></div>
     </transition>
+
+    <LoginModal
+      v-if="authEnabled"
+      v-model="showLogin"
+      :loading="loading"
+      :error="errorMessage"
+      :reset-message="resetMessage"
+      @submit="submitLogin"
+      @reset="submitReset"
+      @forgot="handleForgot"
+    />
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import F1Button from '../components/F1Button.vue'
 import F1Input from '../components/F1Input.vue'
 import logo from '../assets/logo-f1.svg'
+import { useAuthState } from '../utils/authState'
+import LoginModal from '../components/LoginModal.vue'
 
 const searchQuery = ref('')
 const route = useRoute()
 const mobileOpen = ref(false)
+const router = useRouter()
+const showLogin = ref(false)
+const authEnabled = false
 
-const navItems = [
-  { label: 'Home', path: '/home' },
-  { label: 'Drivers', path: '/drivers' },
-  { label: 'News', path: '/news' },
-  { label: 'Teams', path: '/teams' },
-  { label: 'Seasons', path: '/seasons' },
-]
+const { session, isAuthenticated, login, resetPassword, logout, loading, errorMessage, resetMessage } = useAuthState()
+const { t, locale } = useI18n()
+
+const navItems = computed(() => [
+  { label: t('nav.home'), path: '/home' },
+  { label: t('nav.drivers'), path: '/drivers' },
+  { label: t('nav.news'), path: '/news' },
+  { label: t('nav.teams'), path: '/teams' },
+  { label: t('nav.tracks'), path: '/tracks' },
+])
 
 const isActive = (path: string) =>
   path === '/home' ? route.path === '/home' || route.path === '/' : route.path.startsWith(path)
@@ -110,6 +147,42 @@ const toggleMobile = () => {
 
 const closeMobile = () => {
   mobileOpen.value = false
+}
+
+const openLogin = () => {
+  showLogin.value = true
+}
+
+const closeLogin = () => {
+  showLogin.value = false
+}
+
+const submitLogin = async (payload: { email: string; password: string }) => {
+  try {
+    await login(payload.email, payload.password)
+    showLogin.value = false
+    router.push('/home')
+  } catch {
+    // errorMessage already set in auth state
+  }
+}
+
+const handleForgot = (email: string) => {
+  const supportMail = 'mailto:support@formula-one.local?subject=Reset%20Password&body=Account:%20' + encodeURIComponent(email || '')
+  window.open(supportMail, '_blank')
+}
+
+const submitReset = async (payload: { email: string; password: string }) => {
+  try {
+    await resetPassword(payload.email, payload.password)
+  } catch {
+    // error handled in auth state
+  }
+}
+
+const changeLocale = (lang: string) => {
+  locale.value = lang
+  localStorage.setItem('f1_locale', lang)
 }
 
 watch(
@@ -329,10 +402,58 @@ watch(
   gap: 16px;
 }
 
+.f1-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.f1-user__name {
+  font-family: var(--font-tech);
+  letter-spacing: 0.12em;
+  color: #e5e7eb;
+}
+
+.f1-user__logout {
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+}
+
 .f1-actions {
   display: none;
   align-items: center;
   gap: 16px;
+}
+
+.f1-locale {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.f1-locale button {
+  background: transparent;
+  color: #9ca3af;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: var(--font-tech);
+  letter-spacing: 0.14em;
+}
+
+.f1-locale button.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 
 :deep(.f1-menu-button) {
@@ -456,6 +577,78 @@ watch(
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(2px);
   z-index: 80;
+}
+
+.login-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 100;
+  padding: 18px;
+  backdrop-filter: blur(4px);
+}
+
+.login-modal__card {
+  position: relative;
+  width: min(420px, 95vw);
+  background: #0b0e14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px 18px 22px;
+  display: grid;
+  gap: 10px;
+}
+
+.login-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.login-modal__title {
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.login-modal__hint {
+  margin: 0;
+  color: #9ca3af;
+}
+
+.login-modal__form {
+  display: grid;
+  gap: 10px;
+}
+
+.login-modal__field {
+  display: grid;
+  gap: 4px;
+  color: #cbd5e1;
+}
+
+.login-modal__field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.login-modal__error {
+  margin: 0;
+  color: #ef4444;
+  font-size: 13px;
 }
 
 .f1-mobile-drawer {

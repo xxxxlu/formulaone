@@ -1,8 +1,8 @@
 <template>
   <div class="f1-standings f1-card">
     <div class="f1-standings__header">
-      <h3>2025 Driver Standings</h3>
-      <a href="https://www.formula1.com/en/results/2025/drivers" target="_blank" rel="noreferrer">formula1.com</a>
+      <h3>{{ $t('home.driverStandingsTitle') }}</h3>
+      <a href="https://www.formula1.com/en/results/2025/drivers" target="_blank" rel="noreferrer">{{ $t('home.officialSite') }}</a>
     </div>
     <div class="f1-standings__list f1-standings__list--scroll">
       <div

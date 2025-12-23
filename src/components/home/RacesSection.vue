@@ -1,12 +1,12 @@
 <template>
   <div class="f1-races f1-card">
     <div class="f1-races__header">
-      <h4>2025 Race Results</h4>
-      <a href="https://www.formula1.com/en/results/2025/races" target="_blank" rel="noreferrer">formula1.com</a>
+      <h4>{{ $t('home.raceResultsTitle') }}</h4>
+      <a href="https://www.formula1.com/en/results/2025/races" target="_blank" rel="noreferrer">{{ $t('home.officialSite') }}</a>
     </div>
     <div class="f1-races__list">
       <div v-for="race in races" :key="race.round" class="f1-race" :style="{ '--race-accent': race.accent || 'var(--neon-blue)' }">
-        <div class="f1-race__round">Rd {{ race.round.toString().padStart(2, '0') }}</div>
+        <div class="f1-race__round">{{ $t('home.roundLabel', { round: race.round.toString().padStart(2, '0') }) }}</div>
         <span class="f1-race__avatar" :style="{ background: race.accent ? race.accent + '30' : 'rgba(255,255,255,0.08)' }">
           <img v-if="race.winnerAvatar" :src="race.winnerAvatar" :alt="race.winner" loading="lazy" />
         </span>
@@ -15,7 +15,7 @@
           <div class="f1-race__meta">
             <span>{{ race.date }}</span>
             <span class="f1-race__dot"></span>
-            <span>{{ race.laps }} laps</span>
+            <span>{{ race.laps }} {{ $t('home.lapsUnit') }}</span>
           </div>
           <div class="f1-race__winner">
             <span>{{ race.winner }}</span>

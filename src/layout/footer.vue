@@ -6,29 +6,29 @@
         <div class="f1-footer__brand">
           <img class="f1-footer__logo" :src="logo" alt="F1 logo" />
           <div>
-            <div class="f1-footer__title">Telemetry Hub</div>
-            <div class="f1-footer__tagline">Official Telemetry Partner</div>
+            <div class="f1-footer__title">{{ $t('footer.title') }}</div>
+            <div class="f1-footer__tagline">{{ $t('footer.tagline') }}</div>
           </div>
         </div>
         <div class="f1-footer__social">
-          <a class="f1-footer__icon" href="#" aria-label="Global feed">
+          <a class="f1-footer__icon" href="#" :aria-label="$t('footer.socialGlobal')">
             <span class="material-symbols-outlined">public</span>
           </a>
-          <a class="f1-footer__icon" href="#" aria-label="Email">
+          <a class="f1-footer__icon" href="#" :aria-label="$t('footer.socialEmail')">
             <span class="material-symbols-outlined">alternate_email</span>
           </a>
-          <a class="f1-footer__icon" href="#" aria-label="RSS">
+          <a class="f1-footer__icon" href="#" :aria-label="$t('footer.socialRss')">
             <span class="material-symbols-outlined">rss_feed</span>
           </a>
         </div>
       </div>
       <div class="f1-footer__divider"></div>
       <div class="f1-footer__bottom">
-        <p>© 2024 F1 HUB System. Unofficial Data Stream.</p>
+        <p>{{ $t('footer.copyright') }}</p>
         <div class="f1-footer__links">
-          <a href="#">Privacy Protocol</a>
-          <a href="#">System Terms</a>
-          <a href="#">Data Nodes</a>
+          <a href="#">{{ $t('footer.privacy') }}</a>
+          <a href="#">{{ $t('footer.terms') }}</a>
+          <a href="#">{{ $t('footer.data') }}</a>
         </div>
       </div>
     </div>

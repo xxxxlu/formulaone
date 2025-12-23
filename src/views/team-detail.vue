@@ -5,7 +5,7 @@
       <div class="hero__nav">
         <router-link class="hero__back" to="/teams">
           <span class="material-symbols-outlined">arrow_back</span>
-          All teams
+          {{ $t('team.back') }}
         </router-link>
       </div>
       <div class="hero__banner">
@@ -28,7 +28,7 @@
 
     <section id="drivers" class="drivers-section">
       <div class="section-header">
-        <h2>Drivers</h2>
+        <h2>{{ $t('team.drivers') }}</h2>
         <span>2025 lineup</span>
       </div>
       <div class="drivers-grid">
@@ -56,32 +56,32 @@
 
     <section id="statistics" class="stats-section">
       <div class="section-header">
-        <h2>Statistics</h2>
+        <h2>{{ $t('team.season') }}</h2>
         <span>2025 Season</span>
       </div>
       <div class="stats-grid">
         <div class="stat-block">
-          <p class="stat-label">Season Position</p>
+          <p class="stat-label">{{ $t('driver.metaSeasons') }}</p>
           <p class="stat-value">{{ ordinal(team.rank) }}</p>
         </div>
         <div class="stat-block">
-          <p class="stat-label">Season Points</p>
+          <p class="stat-label">{{ $t('tracks.total') }}</p>
           <p class="stat-value">{{ team.seasonPoints ?? 'Updating' }}</p>
         </div>
         <div class="stat-block">
-          <p class="stat-label">Wins</p>
+          <p class="stat-label">{{ $t('driver.pillWins') }}</p>
           <p class="stat-value">{{ team.winsTotal ?? team.titles }}</p>
         </div>
         <div class="stat-block">
-          <p class="stat-label">Pole Positions</p>
+          <p class="stat-label">{{ $t('team.poles') }}</p>
           <p class="stat-value">{{ team.polePositions ?? '—' }}</p>
         </div>
         <div class="stat-block">
-          <p class="stat-label">Fastest Laps</p>
+          <p class="stat-label">{{ $t('team.fastestLaps') }}</p>
           <p class="stat-value">{{ team.fastestLaps ?? '—' }}</p>
         </div>
         <div class="stat-block">
-          <p class="stat-label">Titles</p>
+          <p class="stat-label">{{ $t('team.titles') }}</p>
           <p class="stat-value">{{ team.titles }}</p>
         </div>
       </div>
@@ -89,45 +89,45 @@
 
     <section id="profile" class="profile-section">
       <div class="section-header">
-        <h2>Team Profile</h2>
-        <span>Overview</span>
+        <h2>{{ $t('team.profile') }}</h2>
+        <span>{{ $t('team.bio') }}</span>
       </div>
       <div class="profile-grid">
         <div class="profile-card profile-card--wide">
-          <h3>About</h3>
-          <p>{{ team.about || 'Detailed information will be updated soon.' }}</p>
+          <h3>{{ $t('team.about') }}</h3>
+          <p>{{ team.about || $t('team.profile') }}</p>
         </div>
         <div class="profile-card">
-          <span class="profile-label">Team Chief</span>
-          <strong class="profile-value">{{ team.teamChief || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.chief') }}</span>
+          <strong class="profile-value">{{ team.teamChief || '—' }}</strong>
         </div>
         <div class="profile-card">
-          <span class="profile-label">Technical Chief</span>
-          <strong class="profile-value">{{ team.technicalChief || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.tech') }}</span>
+          <strong class="profile-value">{{ team.technicalChief || '—' }}</strong>
         </div>
         <div class="profile-card">
-          <span class="profile-label">Chassis</span>
-          <strong class="profile-value">{{ team.chassis || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.chassis') }}</span>
+          <strong class="profile-value">{{ team.chassis || '—' }}</strong>
         </div>
         <div class="profile-card">
-          <span class="profile-label">Power Unit</span>
-          <strong class="profile-value">{{ team.powerUnit || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.power') }}</span>
+          <strong class="profile-value">{{ team.powerUnit || '—' }}</strong>
         </div>
         <div class="profile-card">
-          <span class="profile-label">First Entry</span>
-          <strong class="profile-value">{{ team.firstEntry || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.firstEntry') }}</span>
+          <strong class="profile-value">{{ team.firstEntry || '—' }}</strong>
         </div>
         <div class="profile-card">
-          <span class="profile-label">Highest Finish</span>
-          <strong class="profile-value">{{ team.highestFinish || 'Updating' }}</strong>
+          <span class="profile-label">{{ $t('team.bestFinish') }}</span>
+          <strong class="profile-value">{{ team.highestFinish || '—' }}</strong>
         </div>
       </div>
     </section>
 
     <section id="news" class="news-section" v-if="relatedNews.length">
       <div class="section-header">
-        <h2>Related Articles</h2>
-        <span>Latest from the grid</span>
+        <h2>{{ $t('team.news') }}</h2>
+        <span>{{ $t('news.title') }}</span>
       </div>
       <div class="news-grid">
         <article v-for="item in relatedNews" :key="item.slug" class="news-card">
@@ -146,7 +146,7 @@
     </section>
   </main>
   <div v-else class="team-detail team-detail--empty">
-    <p>Team data not found.</p>
+    <p>{{ $t('news.notfound') }}</p>
   </div>
 </template>
 

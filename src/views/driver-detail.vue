@@ -7,14 +7,14 @@
         <span class="driver-hero__grid"></span>
       </div>
       <div class="driver-hero__nav">
-        <RouterLink class="driver-hero__back" to="/drivers">
-          <span class="material-symbols-outlined">arrow_back</span>
-          Back to roster
-        </RouterLink>
-      </div>
+          <RouterLink class="driver-hero__back" to="/drivers">
+            <span class="material-symbols-outlined">arrow_back</span>
+            {{ $t('nav.drivers') }}
+          </RouterLink>
+        </div>
       <div class="driver-hero__content">
         <div class="driver-hero__info">
-          <p class="driver-hero__eyebrow">Official telemetry profile</p>
+          <p class="driver-hero__eyebrow">{{ $t('driver.eyebrow') }}</p>
           <h1 class="driver-hero__title">
             <span>{{ driver.firstName }}</span>
             <strong>{{ driver.lastName }}</strong>
@@ -34,7 +34,7 @@
             </span>
             <span class="driver-hero__meta-pill">
               <span class="material-symbols-outlined">calendar_month</span>
-              Seasons: {{ seasons }}
+              {{ $t('driver.metaSeasons') }}: {{ seasons }}
             </span>
           </div>
           <p class="driver-hero__bio">
@@ -48,19 +48,19 @@
           </div>
           <div class="driver-hero__pills">
             <div class="driver-hero__pill">
-              <p class="pill-label">World Titles</p>
+              <p class="pill-label">{{ $t('driver.pillTitles') }}</p>
               <p class="pill-value">{{ careerTitles }}</p>
             </div>
             <div class="driver-hero__pill">
-              <p class="pill-label">Grand Prix Wins</p>
+              <p class="pill-label">{{ $t('driver.pillWins') }}</p>
               <p class="pill-value">{{ careerWins }}</p>
             </div>
             <div class="driver-hero__pill">
-              <p class="pill-label">Podiums</p>
+              <p class="pill-label">{{ $t('driver.pillPodiums') }}</p>
               <p class="pill-value">{{ careerPodiums || '—' }}</p>
             </div>
             <div class="driver-hero__pill">
-              <p class="pill-label">Race Starts</p>
+              <p class="pill-label">{{ $t('driver.pillStarts') }}</p>
               <p class="pill-value">{{ careerStarts || '—' }}</p>
             </div>
           </div>
@@ -78,15 +78,15 @@
           <div class="driver-hero__glow"></div>
           <div class="driver-hero__data">
             <div class="driver-hero__data-item">
-              <p class="data-label">赛季积分</p>
+              <p class="data-label">{{ $t('driver.seasonPoints') ?? $t('driver.seasonForm') }}</p>
               <p class="data-value">{{ seasonPoints }}</p>
             </div>
             <div class="driver-hero__data-item">
-              <p class="data-label">赛季胜场</p>
+              <p class="data-label">{{ $t('driver.pillWins') }}</p>
               <p class="data-value">{{ seasonWins }}</p>
             </div>
             <div class="driver-hero__data-item">
-              <p class="data-label">杆位</p>
+              <p class="data-label">{{ $t('driver.ratingsTag') }}</p>
               <p class="data-value">{{ seasonPoles }}</p>
             </div>
           </div>
@@ -99,29 +99,29 @@
         <header class="panel__header">
           <h2>
             <span class="material-symbols-outlined">fingerprint</span>
-            Personal dossier
+            {{ $t('driver.bio') }}
           </h2>
-          <span class="panel__tag">Identity + contract</span>
+          <span class="panel__tag">{{ $t('driver.bio') }}</span>
         </header>
         <div class="panel__body panel__body--grid">
           <div class="panel__field">
-            <p class="panel__label">Birth</p>
+            <p class="panel__label">{{ $t('driver.birth') }}</p>
             <p class="panel__value">{{ birthPlace }} · {{ birthDate }}</p>
           </div>
           <div class="panel__field">
-            <p class="panel__label">Debut</p>
+            <p class="panel__label">{{ $t('driver.debut') }}</p>
             <p class="panel__value">{{ debutText }}</p>
           </div>
           <div class="panel__field">
-            <p class="panel__label">First Win</p>
+            <p class="panel__label">{{ $t('driver.firstWin') }}</p>
             <p class="panel__value">{{ firstWinText }}</p>
           </div>
           <div class="panel__field">
-            <p class="panel__label">License</p>
+            <p class="panel__label">{{ $t('driver.license') }}</p>
             <p class="panel__value">{{ licenseStatus }}</p>
           </div>
           <div class="panel__field panel__field--full">
-            <p class="panel__label">Career Summary</p>
+            <p class="panel__label">{{ $t('driver.summary') }}</p>
             <p class="panel__value panel__value--muted">
               {{ profileSummary }}
             </p>
@@ -139,9 +139,9 @@
         <header class="panel__header">
           <h2>
             <span class="material-symbols-outlined">query_stats</span>
-            Trophy metrics
+            {{ $t('driver.trophy') }}
           </h2>
-          <span class="panel__tag">Titles, wins, poles</span>
+          <span class="panel__tag">{{ $t('driver.trophyTag') }}</span>
         </header>
         <div class="panel__body panel__body--stats">
           <div v-for="stat in statBlocks" :key="stat.label" class="stat-card">
@@ -163,9 +163,9 @@
         <header class="panel__header">
           <h2>
             <span class="material-symbols-outlined">route</span>
-            Career timeline
+            {{ $t('driver.timeline') }}
           </h2>
-          <span class="panel__tag">Key chapters</span>
+          <span class="panel__tag">{{ $t('driver.timelineTag') }}</span>
         </header>
         <div class="timeline">
           <div v-for="item in timelineItems" :key="item.year + item.title" class="timeline__item">
@@ -183,9 +183,9 @@
         <header class="panel__header">
           <h2>
             <span class="material-symbols-outlined">emoji_events</span>
-            Season form
+            {{ $t('driver.seasonForm') }}
           </h2>
-          <span class="panel__tag">Season vs career</span>
+          <span class="panel__tag">{{ $t('driver.seasonTag') }}</span>
         </header>
         <div class="wins-grid">
           <div v-for="item in seasonHighlights" :key="item.label" class="win-card">
@@ -209,9 +209,9 @@
         <header class="panel__header">
           <h2>
             <span class="material-symbols-outlined">insights</span>
-            Pace radar
+            {{ $t('driver.ratings') }}
           </h2>
-          <span class="panel__tag">Quali vs race trim</span>
+          <span class="panel__tag">{{ $t('driver.ratingsTag') }}</span>
         </header>
         <div class="ratings-grid">
           <div v-for="rating in ratingBlocks" :key="rating.label" class="rating-card">
@@ -232,7 +232,7 @@
     <p>Driver not found.</p>
     <RouterLink class="driver-hero__back" to="/drivers">
       <span class="material-symbols-outlined">arrow_back</span>
-      Back to roster
+      {{ $t('nav.drivers') }}
     </RouterLink>
   </div>
 </template>

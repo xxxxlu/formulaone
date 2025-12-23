@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
               </g>
             </svg>
           </div>
-          <p class="f1-loader__text">Initiating telemetry...</p>
+          <p class="f1-loader__text">{{ $t('loader.initiating') }}</p>
         </div>
       </div>
     </transition>

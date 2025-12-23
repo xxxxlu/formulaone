@@ -2,23 +2,20 @@
   <main class="teams-page">
     <section class="teams-hero">
       <div class="teams-breadcrumb">
-        <span class="teams-crumb">Data Center</span>
+        <span class="teams-crumb">{{ $t('teams.breadcrumbRoot') }}</span>
         <span class="teams-crumb-sep">/</span>
-        <span class="teams-crumb teams-crumb--active">Constructors</span>
+        <span class="teams-crumb teams-crumb--active">{{ $t('teams.breadcrumbActive') }}</span>
       </div>
       <div class="teams-hero__content">
         <div class="teams-hero__text">
           <div class="teams-hero__pulse"></div>
-          <h1>Team Grid</h1>
-          <p>
-            Analyze performance data, base locations, and title counts for the current F1
-            constructors.
-          </p>
+          <h1>{{ $t('teams.title') }}</h1>
+          <p>{{ $t('teams.subtitle') }}</p>
         </div>
         <div class="teams-hero__stat">
           <span class="material-symbols-outlined">dns</span>
           <div>
-            <span class="teams-hero__stat-label">Active Teams</span>
+            <span class="teams-hero__stat-label">{{ $t('teams.active') }}</span>
             <span class="teams-hero__stat-value">{{ teams.length }}</span>
           </div>
         </div>
@@ -26,7 +23,7 @@
       <div class="teams-actions">
         <div class="teams-search">
           <span class="material-symbols-outlined">search</span>
-          <input v-model="query" placeholder="SEARCH TEAMS..." />
+          <input v-model="query" :placeholder="$t('teams.search')" />
         </div>
         <div class="teams-filters">
           <F1Select v-model="season" :options="seasonOptions" />
@@ -61,11 +58,11 @@
           </div>
           <div class="team-card__stats">
             <div class="team-card__stat">
-              <span>Established</span>
+              <span>{{ $t('teams.statEstablished') }}</span>
               <strong>{{ team.established }}</strong>
             </div>
             <div class="team-card__stat">
-              <span>Titles</span>
+              <span>{{ $t('teams.statTitles') }}</span>
               <strong>{{ team.titles }}</strong>
             </div>
           </div>
@@ -95,7 +92,7 @@
             variant="ghost"
             type="button"
           >
-            Data Profile
+            {{ $t('teams.btnProfile') }}
             <span class="material-symbols-outlined">chevron_right</span>
           </F1Button>
         </div>
@@ -107,6 +104,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import F1Button from '../components/F1Button.vue'
 import F1Select from '../components/F1Select.vue'
@@ -129,22 +127,24 @@ const seasons = computed(() => {
   return Array.from(unique).sort((a, b) => b.localeCompare(a))
 })
 
+const { t } = useI18n()
+
 const season = ref<string>(seasons.value[0] ?? '')
 const query = ref('')
 const sortKey = ref<'rank' | 'titles' | 'name'>('rank')
 
 const seasonOptions = computed(() =>
   seasons.value.map((value) => ({
-    label: `Season ${value}`,
+    label: `${t('teams.season')} ${value}`,
     value,
   }))
 )
 
-const sortOptions = [
-  { label: 'Rank', value: 'rank' },
-  { label: 'Titles', value: 'titles' },
-  { label: 'Name (A-Z)', value: 'name' },
-]
+const sortOptions = computed(() => [
+  { label: t('teams.sortRank'), value: 'rank' },
+  { label: t('teams.sortTitles'), value: 'titles' },
+  { label: t('teams.sortName'), value: 'name' },
+])
 
 const filteredTeams = computed(() => {
   const q = query.value.trim().toLowerCase()

@@ -3,58 +3,58 @@
     <div class="f1-next__panel f1-next__panel--info">
       <div class="f1-next__marker">
         <span class="material-symbols-outlined">flag</span>
-        <span>{{ countdown.total <= 0 ? 'Lights Out' : 'Up Next' }}</span>
+        <span>{{ countdown.total <= 0 ? $t('home.startsIn') : $t('home.nextRace') }}</span>
       </div>
       <h3 class="f1-next__title">
         <span v-if="activeEvent?.flag" class="f1-next__flag">{{ activeEvent.flag }}</span>
-        {{ activeEvent?.name || 'Season Complete' }}
+        {{ activeEvent?.name || $t('home.heroTitle') }}
       </h3>
       <div class="f1-next__location">
         <span class="material-symbols-outlined">location_on</span>
-        <span>{{ activeEvent?.location || 'Awaiting Calendar' }}</span>
+        <span>{{ activeEvent?.location || $t('home.calendar') }}</span>
       </div>
     </div>
     <div class="f1-next__panel f1-next__panel--countdown">
       <div class="f1-countdown">
         <div class="f1-countdown__segment">
           <div class="f1-countdown__value-shell">
-            <div class="f1-countdown__value">
-              {{ pad(countdown.days) }}
-            </div>
+          <div class="f1-countdown__value">
+            {{ pad(countdown.days) }}
           </div>
-          <span class="f1-countdown__label">Days</span>
         </div>
-        <span class="f1-countdown__sep">:</span>
-        <div class="f1-countdown__segment">
-          <div class="f1-countdown__value-shell">
-            <div class="f1-countdown__value">
-              {{ pad(countdown.hours) }}
-            </div>
-          </div>
-          <span class="f1-countdown__label">Hrs</span>
-        </div>
-        <span class="f1-countdown__sep">:</span>
-        <div class="f1-countdown__segment">
-          <div class="f1-countdown__value-shell">
-            <div class="f1-countdown__value">
-              {{ pad(countdown.minutes) }}
-            </div>
-          </div>
-          <span class="f1-countdown__label">Mins</span>
-        </div>
-        <span class="f1-countdown__sep">:</span>
-        <div class="f1-countdown__segment">
-          <div class="f1-countdown__value-shell">
-            <div class="f1-countdown__value" :class="{ 'f1-countdown__value--alert': countdown.total <= 0 }">
-              {{ pad(Math.max(0, countdown.seconds)) }}
-            </div>
-          </div>
-          <span class="f1-countdown__label">Secs</span>
-        </div>
+        <span class="f1-countdown__label">{{ $t('home.countdownDays') }}</span>
       </div>
-      <div v-if="countdown.total <= 0" class="f1-countdown__flag">
-        <span class="f1-countdown__flag-emoji">{{ activeEvent?.flag }}</span>
-        <span class="f1-countdown__flag-text">Now Racing: {{ activeEvent?.name }}</span>
+      <span class="f1-countdown__sep">:</span>
+      <div class="f1-countdown__segment">
+        <div class="f1-countdown__value-shell">
+          <div class="f1-countdown__value">
+            {{ pad(countdown.hours) }}
+          </div>
+        </div>
+        <span class="f1-countdown__label">{{ $t('home.countdownHours') }}</span>
+      </div>
+      <span class="f1-countdown__sep">:</span>
+      <div class="f1-countdown__segment">
+        <div class="f1-countdown__value-shell">
+          <div class="f1-countdown__value">
+            {{ pad(countdown.minutes) }}
+          </div>
+        </div>
+        <span class="f1-countdown__label">{{ $t('home.countdownMinutes') }}</span>
+      </div>
+      <span class="f1-countdown__sep">:</span>
+      <div class="f1-countdown__segment">
+        <div class="f1-countdown__value-shell">
+          <div class="f1-countdown__value" :class="{ 'f1-countdown__value--alert': countdown.total <= 0 }">
+            {{ pad(Math.max(0, countdown.seconds)) }}
+          </div>
+        </div>
+        <span class="f1-countdown__label">{{ $t('home.countdownSeconds') }}</span>
+      </div>
+    </div>
+    <div v-if="countdown.total <= 0" class="f1-countdown__flag">
+      <span class="f1-countdown__flag-emoji">{{ activeEvent?.flag }}</span>
+      <span class="f1-countdown__flag-text">{{ $t('home.heroTitle') }}: {{ activeEvent?.name }}</span>
       </div>
     </div>
     <div class="f1-next__panel f1-next__panel--weather">
@@ -62,23 +62,23 @@
         <div class="f1-weather__icon f1-weather__icon--sun">
           <span class="material-symbols-outlined">sunny</span>
         </div>
-        <div class="f1-weather__text">
-          <span class="f1-weather__value">28°C</span>
-          <span class="f1-weather__label">Air Temp</span>
-        </div>
-      </div>
-      <div class="f1-weather__divider"></div>
-      <div class="f1-weather">
-        <div class="f1-weather__icon f1-weather__icon--heat">
-          <span class="material-symbols-outlined">thermometer</span>
-        </div>
-        <div class="f1-weather__text">
-          <span class="f1-weather__value">42°C</span>
-          <span class="f1-weather__label">Track Temp</span>
-        </div>
+      <div class="f1-weather__text">
+        <span class="f1-weather__value">28°C</span>
+        <span class="f1-weather__label">{{ $t('home.airTemp') }}</span>
       </div>
     </div>
-  </section>
+    <div class="f1-weather__divider"></div>
+    <div class="f1-weather">
+      <div class="f1-weather__icon f1-weather__icon--heat">
+        <span class="material-symbols-outlined">thermometer</span>
+      </div>
+      <div class="f1-weather__text">
+        <span class="f1-weather__value">42°C</span>
+        <span class="f1-weather__label">{{ $t('home.trackTemp') }}</span>
+      </div>
+    </div>
+  </div>
+</section>
 </template>
 
 <script setup lang="ts">

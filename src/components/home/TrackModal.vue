@@ -6,18 +6,26 @@
           <div class="f1-track-modal__header">
             <div>
               <p class="f1-track-modal__eyebrow">{{ activeEvent?.name }}</p>
-              <h4 class="f1-track-modal__title">{{ activeTrack?.name || 'Circuit Map' }}</h4>
+              <h4 class="f1-track-modal__title">{{ activeTrack?.name || $t('tracks.circuitMap') }}</h4>
               <p class="f1-track-modal__meta">
                 {{ activeTrack?.location || activeEvent?.location }}
-                <span v-if="activeTrack?.lengthKm"> • {{ activeTrack.lengthKm }} km</span>
+                <span v-if="activeTrack?.lengthKm"> • {{ activeTrack.lengthKm }} {{ $t('tracks.kmUnit') }}</span>
               </p>
             </div>
-            <F1Button variant="ghost" size="sm" transparent square type="button" aria-label="Close track preview" @click="$emit('close')">
+            <F1Button
+              variant="ghost"
+              size="sm"
+              transparent
+              square
+              type="button"
+              :aria-label="$t('tracks.closePreview')"
+              @click="$emit('close')"
+            >
               <span class="material-symbols-outlined">close</span>
             </F1Button>
           </div>
           <div class="f1-track-modal__body">
-            <img :src="activeTrack?.image || defaultTrackImage" :alt="activeTrack?.name || 'Circuit Map'" />
+            <img :src="activeTrack?.image || defaultTrackImage" :alt="activeTrack?.name || $t('tracks.circuitMap')" />
             <p v-if="activeTrack" class="f1-track-modal__desc">
               {{ activeTrack.description }}
             </p>
