@@ -33,6 +33,40 @@ export interface DriverProfile {
   bio: { birthDate: string; birthPlace: string }
 }
 
+export interface Champion {
+  season: string
+  driver: string
+  driverEn?: string
+  team: string
+  teamEn?: string
+  engine: string
+  tyre: string
+  poles: string
+  wins: string
+  podiums: string
+  fastestLaps: string
+  points: string
+  schedule: string
+  lead: string
+}
+
+export interface ConstructorChampion {
+  season: string
+  team: string
+  teamEn?: string
+  engine: string
+  engineEn?: string
+  tyre: string
+  drivers: string
+  driversEn?: string
+  poles: string
+  wins: string
+  podiums: string
+  fastestLaps: string
+  points: string
+  lead: string
+}
+
 export interface Track {
   id: string
   name: string

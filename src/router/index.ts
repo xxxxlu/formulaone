@@ -11,6 +11,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/tracks', name: 'tracks', component: () => import('../views/track-map.vue') },
   { path: '/news', name: 'news', component: () => import('../views/news.vue') },
   { path: '/news/:slug', name: 'news-detail', component: () => import('../views/news-detail.vue') },
+  { path: '/champions', name: 'champions', component: () => import('../views/champions.vue') },
+  { path: '/constructors', name: 'constructor-champions', component: () => import('../views/constructor-champions.vue') },
   { path: '/', redirect: '/home' },
   { path: '/:pathMatch(.*)*', redirect: '/home' },
 ]

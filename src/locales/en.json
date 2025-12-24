@@ -4,7 +4,9 @@
     "drivers": "Drivers",
     "news": "News",
     "teams": "Teams",
-    "tracks": "Track Maps"
+    "tracks": "Track Maps",
+    "champions": "Champions",
+    "constructorChampions": "Constructors"
   },
   "header": {
     "search": "SEARCH DATABASE...",
@@ -198,5 +200,38 @@
     "socialGlobal": "Global feed",
     "socialEmail": "Email",
     "socialRss": "RSS"
+  },
+  "champions": {
+    "title": "F1 World Drivers' Champions",
+    "subtitle": "Teams that have won the F1 season championship in history, power unit, tyre, poles, wins, podiums, fastest laps, points, races and winning margin.",
+    "season": "Season",
+    "driver": "Driver",
+    "team": "Team",
+    "engine": "Engine",
+    "tyre": "Tyre",
+    "poles": "Poles",
+    "wins": "Race wins",
+    "podiums": "Podiums",
+    "fastest": "Fastest laps",
+    "points": "Points",
+    "schedule": "Races",
+    "lead": "Winning margin"
+  },
+  "constructorChampions": {
+    "title": "F1 Constructors' Champions",
+    "subtitle": "Every constructor title from 1958 to 2025 with engines, tyres, winning drivers and key stats. Includes a quick view of the most decorated teams.",
+    "season": "Season",
+    "team": "Team",
+    "engine": "Engine",
+    "drivers": "Drivers",
+    "tyre": "Tyre",
+    "poles": "Poles",
+    "wins": "Race wins",
+    "podiums": "Podiums",
+    "fastest": "Fastest laps",
+    "points": "Points",
+    "lead": "Winning margin",
+    "mostTitles": "Most constructor titles",
+    "totalTitles": "Titles"
   }
 }

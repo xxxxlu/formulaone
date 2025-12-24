@@ -1,13 +1,9 @@
 <template>
-  <header class="f1-header">
+  <header :class="['f1-header', { 'is-solid': scrolled }]">
     <div class="f1-container f1-header__inner">
       <div class="f1-header__brand">
         <RouterLink class="f1-logo" to="/">
           <img class="f1-logo__img" :src="logo" alt="F1 Logo" />
-          <span class="f1-logo__text">
-            <span class="f1-logo__title">{{ $t('header.brandTitle') }}</span>
-            <span class="f1-logo__tagline">{{ $t('header.brandTagline') }}</span>
-          </span>
         </RouterLink>
         <nav class="f1-nav">
           <RouterLink
@@ -21,7 +17,6 @@
             <span class="material-symbols-outlined f1-nav__car" aria-hidden="true">sports_motorsports</span>
             <span class="f1-nav__trail" aria-hidden="true"></span>
           </RouterLink>
-          <RouterLink class="f1-nav__cta" to="#">{{ $t('header.liveData') }}</RouterLink>
         </nav>
       </div>
       <div class="f1-header__actions">
@@ -111,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import F1Button from '../components/F1Button.vue'
@@ -136,7 +131,23 @@ const navItems = computed(() => [
   { label: t('nav.news'), path: '/news' },
   { label: t('nav.teams'), path: '/teams' },
   { label: t('nav.tracks'), path: '/tracks' },
+  { label: t('nav.champions'), path: '/champions' },
+  { label: t('nav.constructorChampions'), path: '/constructors' },
 ])
+
+const scrolled = ref(false)
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 100
+}
+
+onMounted(() => {
+  handleScroll()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const isActive = (path: string) =>
   path === '/home' ? route.path === '/home' || route.path === '/' : route.path.startsWith(path)
@@ -195,9 +206,18 @@ watch(
   top: 0;
   z-index: 40;
   padding: 16px 24px;
-  background: #0a0a12;
+  background: rgba(10, 10, 18, 0);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  box-shadow: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  backdrop-filter: blur(0px);
+}
+
+.f1-header.is-solid {
+  background: linear-gradient(90deg, rgba(9, 14, 24, 0.95), rgba(12, 22, 34, 0.9));
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
 }
 
 .f1-header__inner {
@@ -210,7 +230,7 @@ watch(
 .f1-header__brand {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 28px;
 }
 
 .f1-logo {
@@ -221,30 +241,9 @@ watch(
 }
 
 .f1-logo__img {
-  height: 28px;
+  height: 32px;
   width: auto;
-  filter: drop-shadow(0 0 10px rgba(225, 6, 0, 0.35));
-}
-
-.f1-logo__text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.f1-logo__title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-}
-
-.f1-logo__tagline {
-  font-family: var(--font-tech);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--text-dim);
+  filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.35));
 }
 
 .f1-nav {

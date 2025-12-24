@@ -4,7 +4,9 @@
     "drivers": "车手",
     "news": "新闻",
     "teams": "车队",
-    "tracks": "赛道地图"
+    "tracks": "赛道地图",
+    "champions": "历年冠军",
+    "constructorChampions": "车队冠军"
   },
   "header": {
     "search": "搜索数据库...",
@@ -198,5 +200,38 @@
     "socialGlobal": "全球订阅",
     "socialEmail": "邮件",
     "socialRss": "RSS"
+  },
+  "champions": {
+    "title": "F1 世界车手冠军榜",
+    "subtitle": " F1 历史赛季冠军所在车队、发动机、轮胎、杆位、分站胜场、领奖台、最快圈、积分、赛程与领先分数。",
+    "season": "赛季",
+    "driver": "车手",
+    "team": "车队",
+    "engine": "发动机",
+    "tyre": "轮胎",
+    "poles": "杆位",
+    "wins": "分站冠军",
+    "podiums": "领奖台",
+    "fastest": "最快圈",
+    "points": "积分",
+    "schedule": "赛程",
+    "lead": "领先分"
+  },
+  "constructorChampions": {
+    "title": "F1 历年车队冠军",
+    "subtitle": "1958-2025 赛季全部车队冠军，包含动力、轮胎、获胜车手与关键数据，并突出总冠军次数最多的车队。",
+    "season": "赛季",
+    "team": "车队",
+    "engine": "发动机",
+    "drivers": "车手阵容",
+    "tyre": "轮胎",
+    "poles": "杆位",
+    "wins": "分站冠军",
+    "podiums": "领奖台",
+    "fastest": "最快圈",
+    "points": "积分",
+    "lead": "领先分",
+    "mostTitles": "总冠军次数最多",
+    "totalTitles": "冠军数"
   }
 }
