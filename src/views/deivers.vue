@@ -27,6 +27,18 @@
       </section>
 
       <section class="drivers-filters">
+        <div class="drivers-era">
+          <label for="driver-era">{{ $t('drivers.rosterLabel') }}</label>
+          <F1Select
+            id="driver-era"
+            v-model="eraFilter"
+            :options="[
+              { label: t('drivers.roster2026'), value: '2026' },
+              { label: t('drivers.roster2025'), value: '2025' },
+              { label: t('drivers.rosterLegends'), value: 'legend' },
+            ]"
+          />
+        </div>
         <div class="drivers-filter-group">
           <F1Button
             v-for="option in filters"
@@ -138,6 +150,10 @@
         </div>
       </section>
 
+      <section v-if="!pagedDrivers.length" class="drivers-empty">
+        <p>{{ $t('drivers.emptyRoster') }}</p>
+      </section>
+
       <section v-if="pageCount > 1" class="drivers-pagination">
         <div class="drivers-pagination__inner">
           <F1Button
@@ -192,6 +208,7 @@ import type { Driver, RootState } from '../store'
 type FilterKey = 'all' | 'active' | 'champions' | 'legends'
 
 type SortKey = 'championships' | 'name' | 'wins'
+type EraKey = '2026' | '2025' | 'legend'
 
 const { t } = useI18n()
 
@@ -211,6 +228,7 @@ const sortOptions = computed<Array<{ label: string; value: SortKey }>>(() => [
 const router = useRouter()
 const store = useStore<RootState>()
 const activeFilter = ref<FilterKey>('all')
+const eraFilter = ref<EraKey>('2025')
 const sortKey = ref<SortKey>('championships')
 const currentPage = ref(1)
 const pageSize = 12
@@ -222,16 +240,21 @@ let tipTimer: number | null = null
 const drivers = computed(() => store.state.drivers)
 
 const filteredDrivers = computed(() => {
+  const listByEra = drivers.value.filter((driver) => {
+    if (eraFilter.value === 'legend') return driver.era === 'legend'
+    return driver.era === eraFilter.value
+  })
+
   if (activeFilter.value === 'active') {
-    return drivers.value.filter((driver: { status: string }) => driver.status === 'active')
+    return listByEra.filter((driver) => driver.status === 'active')
   }
   if (activeFilter.value === 'champions') {
-    return drivers.value.filter((driver: { championships: number }) => driver.championships > 0)
+    return listByEra.filter((driver) => driver.championships > 0)
   }
   if (activeFilter.value === 'legends') {
-    return drivers.value.filter((driver: { status: string }) => driver.status === 'legend')
+    return listByEra.filter((driver) => driver.status === 'legend')
   }
-  return drivers.value
+  return listByEra
 })
 
 const sortedDrivers = computed(() => {
@@ -505,6 +528,20 @@ const handleCardClick = (driver: Driver) => {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.drivers-era {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drivers-era label {
+  font-family: var(--drivers-font-display);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #9ca3af;
 }
 
 .drivers-filter-group {
@@ -952,6 +989,14 @@ const handleCardClick = (driver: Driver) => {
   display: flex;
   justify-content: center;
   margin-top: 8px;
+}
+
+.drivers-empty {
+  padding: 24px 0 12px;
+  text-align: center;
+  color: #9ca3af;
+  font-family: var(--drivers-font-display);
+  letter-spacing: 0.08em;
 }
 
 .drivers-pagination__inner {

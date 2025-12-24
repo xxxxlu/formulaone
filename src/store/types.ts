@@ -1,4 +1,5 @@
 export type DriverStatus = 'active' | 'legend'
+export type DriverEra = '2025' | '2026' | 'legend'
 
 export interface Driver {
   id: string
@@ -10,6 +11,7 @@ export interface Driver {
   countryCode: string
   nationality: string
   status: DriverStatus
+  era: DriverEra
   championships: number
   wins: number
   startYear: number

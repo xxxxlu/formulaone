@@ -181,7 +181,12 @@
     "cardStatusActive": "现役",
     "cardId": "编号",
     "present": "至今",
-    "legendTip": "传奇车手档案暂不提供查看。"
+    "legendTip": "传奇车手档案暂不提供查看。",
+    "rosterLabel": "阵容",
+    "roster2026": "2026 阵容",
+    "roster2025": "2025 阵容",
+    "rosterLegends": "传奇车手",
+    "emptyRoster": "该阵容暂无车手数据。"
   },
   "footer": {
     "title": "遥测中心",

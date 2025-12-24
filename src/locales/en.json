@@ -181,7 +181,12 @@
     "cardStatusActive": "Active",
     "cardId": "ID",
     "present": "PRESENT",
-    "legendTip": "This legend profile is not available."
+    "legendTip": "This legend profile is not available.",
+    "rosterLabel": "Roster",
+    "roster2026": "2026 Lineup",
+    "roster2025": "2025 Lineup",
+    "rosterLegends": "Legends",
+    "emptyRoster": "No drivers available for this roster yet."
   },
   "footer": {
     "title": "Telemetry Hub",
