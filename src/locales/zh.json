@@ -199,7 +199,15 @@
     "data": "数据节点",
     "socialGlobal": "全球订阅",
     "socialEmail": "邮件",
-    "socialRss": "RSS"
+    "socialRss": "RSS",
+    "about": "面向车迷的实时计时、新闻与统计。非官方镜像，紧贴赛场脉搏。",
+    "links": "快捷入口",
+    "contact": "联系我们",
+    "contactEmail": "邮件支持",
+    "contactX": "X / 推特",
+    "contactFacebook": "Facebook",
+    "contactGithub": "GitHub",
+    "social": "社交流"
   },
   "champions": {
     "title": "F1 世界车手冠军榜",

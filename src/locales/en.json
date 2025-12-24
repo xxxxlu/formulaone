@@ -199,7 +199,15 @@
     "data": "Data Nodes",
     "socialGlobal": "Global feed",
     "socialEmail": "Email",
-    "socialRss": "RSS"
+    "socialRss": "RSS",
+    "about": "Live timing, news and stats crafted for fans. Non-official mirror of the paddock pulse.",
+    "links": "Quick Links",
+    "contact": "Contact",
+    "contactEmail": "Email support",
+    "contactX": "X / Twitter",
+    "contactFacebook": "Facebook",
+    "contactGithub": "GitHub",
+    "social": "Social Streams"
   },
   "champions": {
     "title": "F1 World Drivers' Champions",
