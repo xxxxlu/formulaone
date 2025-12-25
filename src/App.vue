@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import Header from './layout/header.vue'
 import Footer from './layout/footer.vue'
 import F1Button from './components/F1Button.vue'
 import { isRouting, setRouting } from './utils/loadingState'
 
+const route = useRoute()
 const loading = computed(() => isRouting.value)
 const showBackTop = ref(false)
+const hideChrome = computed(() => route.name === 'christmas')
 
 const handleScroll = () => {
   showBackTop.value = window.scrollY > 200
@@ -72,12 +75,12 @@ onBeforeUnmount(() => {
       </div>
     </transition>
 
-    <Header />
+    <Header v-if="!hideChrome" />
     <router-view></router-view>
-    <Footer />
+    <Footer v-if="!hideChrome" />
 
     <transition name="fade-up">
-      <div v-if="showBackTop" class="f1-backtop">
+      <div v-if="showBackTop && !hideChrome" class="f1-backtop">
         <F1Button
           class="f1-backtop__btn"
           size="lg"

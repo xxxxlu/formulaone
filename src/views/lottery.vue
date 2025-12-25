@@ -69,7 +69,7 @@
 import { computed, ref } from 'vue'
 
 type Gift = { id: number; score: number | null; open: boolean }
-type Spark = { dx: number; dy: number; h: number }
+type Spark = { ox: number; oy: number; dx: number; dy: number; h: number }
 
 const gifts = ref<Gift[]>(createGifts())
 const revealing = ref(false)
