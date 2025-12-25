@@ -1,5 +1,5 @@
 <template>
-  <footer class="f1-footer">
+  <footer v-show="!hideFooter" class="f1-footer">
     <div class="f1-footer__bg"></div>
     <div class="f1-container f1-footer__inner">
       <div class="f1-footer__grid">
@@ -77,7 +77,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import logo from '../assets/logo-f1.svg'
+
+const route = useRoute()
+const hideFooter = computed(() => route.path === '/christmas')
 </script>
 
 <style scoped lang="scss">

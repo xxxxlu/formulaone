@@ -6,7 +6,8 @@
     "teams": "车队",
     "tracks": "赛道地图",
     "champions": "历年冠军",
-    "constructorChampions": "车队冠军"
+    "constructorChampions": "车队冠军",
+    "christmas": "圣诞树"
   },
   "header": {
     "search": "搜索数据库...",

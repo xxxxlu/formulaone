@@ -30,6 +30,11 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="app-shell">
+    <div class="snow-overlay" aria-hidden="true">
+      <div class="snow snow--near"></div>
+      <div class="snow snow--far"></div>
+    </div>
+
     <transition name="loader-fade">
       <div v-if="loading" class="f1-loader__overlay">
         <div class="f1-loader">
@@ -101,6 +106,63 @@ onBeforeUnmount(() => {
 .app-shell {
   position: relative;
   min-height: 100vh;
+}
+
+.snow-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+}
+
+.snow {
+  position: absolute;
+  inset: -20% 0 0 0;
+  background-repeat: repeat;
+  background-size: 280px 280px;
+  opacity: 0.7;
+  animation: snow-fall var(--speed, 18s) linear infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
+  mask-image: radial-gradient(circle at 50% 50%, black 60%, transparent 95%);
+  mask-size: 200% 200%;
+  mask-position: center;
+}
+
+.snow--near {
+  --speed: 16s;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.9) 60%, transparent 65%),
+    radial-gradient(3px 3px at 120px 80px, rgba(255, 255, 255, 0.8) 55%, transparent 60%),
+    radial-gradient(2.5px 2.5px at 200px 160px, rgba(255, 255, 255, 0.85) 60%, transparent 65%),
+    radial-gradient(3px 3px at 80px 220px, rgba(255, 255, 255, 0.9) 60%, transparent 65%),
+    radial-gradient(3px 3px at 180px 40px, rgba(255, 255, 255, 0.8) 55%, transparent 60%),
+    radial-gradient(2px 2px at 60px 180px, rgba(255, 255, 255, 0.9) 60%, transparent 65%),
+    radial-gradient(4px 4px at 140px 200px, rgba(255, 255, 255, 0.85) 55%, transparent 60%),
+    radial-gradient(2px 2px at 40px 240px, rgba(255, 255, 255, 0.9) 60%, transparent 65%);
+  animation-delay: -4s;
+}
+
+.snow--far {
+  --speed: 26s;
+  opacity: 0.45;
+  background-image:
+    radial-gradient(1.5px 1.5px at 40px 60px, rgba(255, 255, 255, 0.7) 60%, transparent 65%),
+    radial-gradient(1.8px 1.8px at 160px 140px, rgba(255, 255, 255, 0.65) 55%, transparent 60%),
+    radial-gradient(1.6px 1.6px at 220px 40px, rgba(255, 255, 255, 0.7) 60%, transparent 65%),
+    radial-gradient(1.5px 1.5px at 90px 180px, rgba(255, 255, 255, 0.7) 60%, transparent 65%),
+    radial-gradient(2px 2px at 200px 220px, rgba(255, 255, 255, 0.7) 60%, transparent 65%),
+    radial-gradient(1.8px 1.8px at 80px 260px, rgba(255, 255, 255, 0.65) 55%, transparent 60%);
+}
+
+@keyframes snow-fall {
+  to {
+    transform: translateY(20%);
+  }
 }
 
 .loader-fade-enter-active,

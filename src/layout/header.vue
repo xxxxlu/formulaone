@@ -1,5 +1,5 @@
 <template>
-  <header :class="['f1-header', { 'is-solid': scrolled }]">
+  <header v-show="!hideHeader" :class="['f1-header', { 'is-solid': scrolled }]">
     <div class="f1-container f1-header__inner">
       <div class="f1-header__brand">
         <RouterLink class="f1-logo" to="/">
@@ -118,6 +118,7 @@ import LoginModal from '../components/LoginModal.vue'
 const searchQuery = ref('')
 const route = useRoute()
 const mobileOpen = ref(false)
+const hideHeader = computed(() => route.path === '/christmas')
 const router = useRouter()
 const showLogin = ref(false)
 const authEnabled = false
@@ -133,6 +134,7 @@ const navItems = computed(() => [
   { label: t('nav.tracks'), path: '/tracks' },
   { label: t('nav.champions'), path: '/champions' },
   { label: t('nav.constructorChampions'), path: '/constructors' },
+  { label: t('nav.christmas'), path: '/christmas' },
 ])
 
 const scrolled = ref(false)
