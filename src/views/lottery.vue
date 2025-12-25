@@ -123,11 +123,16 @@ function createSparks(bursts = 8, perBurst = 10) {
 
 function weightedScore() {
   const r = Math.random()
-  if (r < 0.75) {
-    return Math.floor(r / 0.15) + 1 // 1-5 each 15%
-  }
-  const rem = r - 0.75
-  return 6 + Math.min(4, Math.floor(rem / 0.05)) // 6-10 share remaining 25%
+  // 1-5: 15% each (unchanged)
+  if (r < 0.75) return Math.floor(r / 0.15) + 1
+
+  // 6-10: 8%, 6%, 5%, 4%, 2% (decreasing)
+  const remaining = r - 0.75
+  if (remaining < 0.08) return 6
+  if (remaining < 0.08 + 0.06) return 7
+  if (remaining < 0.08 + 0.06 + 0.05) return 8
+  if (remaining < 0.08 + 0.06 + 0.05 + 0.04) return 9
+  return 10
 }
 
 function shuffle() {
@@ -154,6 +159,8 @@ function reveal() {
   revealing.value = true
   showFireworks.value = false
   lastScore.value = null
+  // clear previous round state immediately
+  gifts.value = gifts.value.map((g) => ({ ...g, open: false, score: null }))
   activeIndex.value = 0
 
   const targetIndex = Math.floor(Math.random() * gifts.value.length)
@@ -161,7 +168,8 @@ function reveal() {
 
   spinTimer && clearInterval(spinTimer)
   spinTimer = setInterval(() => {
-    activeIndex.value = (activeIndex.value + 1) % gifts.value.length
+    const len = gifts.value.length
+    activeIndex.value = Math.floor(Math.random() * len)
   }, 120)
 
   setTimeout(() => {
