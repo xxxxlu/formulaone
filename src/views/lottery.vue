@@ -18,18 +18,13 @@
       </div>
 
       <div class="grid" :class="gridClasses">
-        <div
-          v-for="(gift, idx) in gifts"
-          :key="gift.id"
-          class="gift"
-          :class="{ open: gift.open, active: idx === activeIndex }"
-          :style="{
+        <div v-for="(gift, idx) in gifts" :key="gift.id" class="gift"
+          :class="{ open: gift.open, active: idx === activeIndex }" :style="{
             transitionDelay: `${idx * 35}ms`,
             '--idx': idx,
             '--col': idx % 5,
             '--row': Math.floor(idx / 5),
-          }"
-        >
+          }">
           <div class="gift-inner">
             <div class="gift-emoji">🎁</div>
             <div v-if="gift.open" class="gift-score">+{{ gift.score }}</div>
@@ -48,19 +43,14 @@
     </div>
 
     <div v-if="showFireworks" class="fireworks">
-      <span
-        v-for="(s, idx) in sparks"
-        :key="idx"
-        class="spark"
-        :style="{
-          '--ox': `${s.ox}%`,
-          '--oy': `${s.oy}%`,
-          '--dx': `${s.dx}px`,
-          '--dy': `${s.dy}px`,
-          '--hue': s.h,
-          '--delay': `${idx * 20}ms`,
-        }"
-      />
+      <span v-for="(s, idx) in sparks" :key="idx" class="spark" :style="{
+        '--ox': `${s.ox}%`,
+        '--oy': `${s.oy}%`,
+        '--dx': `${s.dx}px`,
+        '--dy': `${s.dy}px`,
+        '--hue': s.h,
+        '--delay': `${idx * 20}ms`,
+      }" />
     </div>
   </div>
 </template>
@@ -121,18 +111,31 @@ function createSparks(bursts = 8, perBurst = 10) {
   return sparks
 }
 
-function weightedScore() {
-  const r = Math.random()
-  // 1-5: 15% each (unchanged)
-  if (r < 0.75) return Math.floor(r / 0.15) + 1
+function weightedRandom<T>(items: { value: T; weight: number }[]): T {
+  const total = items.reduce((sum, i) => sum + i.weight, 0)
+  let r = Math.random() * total
 
-  // 6-10: 8%, 6%, 5%, 4%, 2% (decreasing)
-  const remaining = r - 0.75
-  if (remaining < 0.08) return 6
-  if (remaining < 0.08 + 0.06) return 7
-  if (remaining < 0.08 + 0.06 + 0.05) return 8
-  if (remaining < 0.08 + 0.06 + 0.05 + 0.04) return 9
-  return 10
+  for (const item of items) {
+    if (r < item.weight) return item.value
+    r -= item.weight
+  }
+
+  throw new Error("Invalid weights")
+}
+
+function weightedScore() {
+  return weightedRandom([
+    { value: 1, weight: 16 },
+    { value: 2, weight: 16 },
+    { value: 3, weight: 16 },
+    { value: 4, weight: 16 },
+    { value: 5, weight: 16 },
+    { value: 6, weight: 7 },
+    { value: 7, weight: 5 },
+    { value: 8, weight: 4 },
+    { value: 9, weight: 3 },
+    { value: 10, weight: 1 },
+  ])
 }
 
 function shuffle() {
@@ -311,10 +314,8 @@ function reveal() {
 }
 
 .grid:not(.gather):not(.deal) .gift {
-  transform: translate(
-      calc(var(--col, 0) * (var(--size) + var(--gap))),
-      calc(var(--row, 0) * (var(--size) + var(--gap)))
-    );
+  transform: translate(calc(var(--col, 0) * (var(--size) + var(--gap))),
+      calc(var(--row, 0) * (var(--size) + var(--gap))));
 }
 
 @keyframes deal {
@@ -322,14 +323,11 @@ function reveal() {
     opacity: 0;
     transform: translate(var(--center-x), var(--center-y)) scale(0.2) rotate(-6deg);
   }
+
   to {
     opacity: 1;
-    transform: translate(
-        calc(var(--col, 0) * (var(--size) + var(--gap))),
-        calc(var(--row, 0) * (var(--size) + var(--gap)))
-      )
-      scale(1)
-      rotate(0deg);
+    transform: translate(calc(var(--col, 0) * (var(--size) + var(--gap))),
+        calc(var(--row, 0) * (var(--size) + var(--gap)))) scale(1) rotate(0deg);
   }
 }
 
@@ -377,6 +375,7 @@ function reveal() {
     transform: scale(0.6);
     opacity: 0.6;
   }
+
   to {
     transform: scale(1.1);
     opacity: 0;
@@ -388,13 +387,11 @@ function reveal() {
   width: 180%;
   height: 180%;
   border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    rgba(255, 205, 120, 0.8),
-    rgba(255, 150, 80, 0.6),
-    rgba(255, 220, 150, 0.1),
-    transparent
-  );
+  background: conic-gradient(from 0deg,
+      rgba(255, 205, 120, 0.8),
+      rgba(255, 150, 80, 0.6),
+      rgba(255, 220, 150, 0.1),
+      transparent);
   mask: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, transparent 65%);
   animation: explode 0.7s ease-out forwards;
   pointer-events: none;
@@ -405,6 +402,7 @@ function reveal() {
     transform: scale(0.4) rotate(0deg);
     opacity: 0.9;
   }
+
   to {
     transform: scale(1.2) rotate(120deg);
     opacity: 0;
@@ -486,9 +484,11 @@ function reveal() {
     transform: translate(0, 0) scale(0.6);
     opacity: 1;
   }
+
   60% {
     opacity: 0.95;
   }
+
   to {
     transform: translate(var(--dx), var(--dy)) scale(0);
     opacity: 0;
