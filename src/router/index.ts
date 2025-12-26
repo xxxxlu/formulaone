@@ -15,13 +15,26 @@ const routes: RouteRecordRaw[] = [
   { path: '/constructors', name: 'constructor-champions', component: () => import('../views/constructor-champions.vue') },
   { path: '/christmas', name: 'christmas', component: () => import('../views/christmas.vue') },
   { path: '/lottery', name: 'lottery', component: () => import('../views/lottery.vue') },
+  { path: '/not-found', name: 'not-found', component: () => import('../views/not-found.vue') },
   { path: '/', redirect: '/home' },
-  { path: '/:pathMatch(.*)*', redirect: '/home' },
+  { path: '/:pathMatch(.*)*', redirect: '/not-found' },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'lottery') {
+    const unlocked = localStorage.getItem('xmasGiftUnlocked') === 'true'
+    // Only block direct/unauthorized entry; allow when coming from christmas even if storage failed
+    if (!unlocked && from.name !== 'christmas') {
+      next({ name: 'not-found', query: { reason: 'forbidden' } })
+      return
+    }
+  }
+  next()
 })
 
 export default router
