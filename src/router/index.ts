@@ -25,16 +25,4 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.name === 'lottery') {
-    const unlocked = localStorage.getItem('xmasGiftUnlocked') === 'true'
-    // Only block direct/unauthorized entry; allow when coming from christmas even if storage failed
-    if (!unlocked && from.name !== 'christmas') {
-      next({ name: 'not-found', query: { reason: 'forbidden' } })
-      return
-    }
-  }
-  next()
-})
-
 export default router
