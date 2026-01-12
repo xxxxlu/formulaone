@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/constructors', name: 'constructor-champions', component: () => import('../views/constructor-champions.vue') },
   { path: '/christmas', name: 'christmas', component: () => import('../views/christmas.vue') },
   { path: '/lottery', name: 'lottery', component: () => import('../views/lottery.vue') },
+  { path: '/rag', name: 'rag', component: () => import('../views/rag.vue') },
   { path: '/not-found', name: 'not-found', component: () => import('../views/not-found.vue') },
   { path: '/', redirect: '/home' },
   { path: '/:pathMatch(.*)*', redirect: '/not-found' },

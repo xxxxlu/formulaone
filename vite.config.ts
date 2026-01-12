@@ -1,7 +1,20 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  server: {
+    proxy: {
+      // 前端 fetch('/ask') -> 后端 http://127.0.0.1:8000/ask
+      '/ask': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+      // 可选：健康检查
+      '/health': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
