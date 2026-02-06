@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import Home from '../views/home.vue'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/home', name: 'home', component: Home, alias: ['/'] },
+  { path: '/home', name: 'home', component: Home },
   { path: '/drivers', name: 'drivers', component: () => import('../views/deivers.vue') },
   { path: '/drivers/:id', name: 'driver-detail', component: () => import('../views/driver-detail.vue') },
   { path: '/teams', name: 'teams', component: () => import('../views/teams.vue') },
@@ -17,11 +17,12 @@ const routes: RouteRecordRaw[] = [
   { path: '/lottery', name: 'lottery', component: () => import('../views/lottery.vue') },
   { path: '/rag', name: 'rag', component: () => import('../views/rag.vue') },
   { path: '/not-found', name: 'not-found', component: () => import('../views/not-found.vue') },
+  { path: '/', redirect: '/home' },
   { path: '/:pathMatch(.*)*', redirect: '/not-found' },
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 

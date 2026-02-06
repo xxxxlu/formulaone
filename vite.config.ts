@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [vue()],
+  // GitHub Pages 部署在 /formulaone/ 子路径，本地开发仍保持根路径。
+  base: mode === 'production' ? '/formulaone/' : '/',
   server: {
     proxy: {
       // 前端 fetch('/ask') -> 后端 http://127.0.0.1:8000/ask
@@ -17,4 +19,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
