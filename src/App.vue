@@ -44,6 +44,14 @@ const revealElements = () => {
   targets.forEach((el) => revealObserver?.observe(el))
 }
 
+const syncRouteAnimations = () => {
+  // wait for route transition + DOM flush, then register reveal targets
+  requestAnimationFrame(() => {
+    revealElements()
+    updateViewportProgress()
+  })
+}
+
 const backToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -65,10 +73,7 @@ onBeforeUnmount(() => {
 watch(
   () => route.fullPath,
   () => {
-    nextTick(() => {
-      revealElements()
-      updateViewportProgress()
-    })
+    nextTick(syncRouteAnimations)
   }
 )
 </script>
@@ -123,7 +128,7 @@ watch(
 
     <Header v-if="!hideChrome" />
     <router-view v-slot="{ Component, route: currentRoute }">
-      <transition name="page-shift" mode="out-in">
+      <transition name="page-shift" mode="out-in" @after-enter="syncRouteAnimations">
         <component :is="Component" :key="currentRoute.fullPath" />
       </transition>
     </router-view>

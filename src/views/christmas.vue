@@ -6,7 +6,7 @@
     </button>
     <iframe
       class="christmas-frame"
-      src="/christmas.html"
+      :src="christmasSrc"
       title="Christmas Tree Effect"
       referrerpolicy="no-referrer"
       allow="autoplay"
@@ -19,17 +19,18 @@ import { onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const christmasSrc = `${import.meta.env.BASE_URL}christmas.html`
 const goBack = () => {
   if (history.length > 1) {
     router.back();
   } else {
-    router.push('/');
+    router.push('/home');
   }
 };
 
 const onMessage = (event: MessageEvent) => {
   if (event?.data?.type === 'letter-opened') {
-    window.location.href = '/lottery';
+    router.push('/lottery')
   }
 };
 
