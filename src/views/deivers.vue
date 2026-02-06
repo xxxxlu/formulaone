@@ -69,7 +69,7 @@
 
       <section class="drivers-grid">
         <div
-          v-for="(driver, idx) in pagedDrivers"
+          v-for="(driver, idx) in sortedDrivers"
           :key="driver.id"
           class="driver-card f1-reveal"
           :class="{ 'driver-card--legend': driver.status === 'legend' }"
@@ -158,52 +158,12 @@
         </div>
       </section>
 
-      <section v-if="!pagedDrivers.length" class="drivers-empty f1-surface f1-reveal" style="--reveal-delay: 180ms">
+      <section v-if="!sortedDrivers.length" class="drivers-empty f1-surface f1-reveal" style="--reveal-delay: 180ms">
         <span class="material-symbols-outlined">sentiment_dissatisfied</span>
         <p>{{ $t('drivers.emptyRoster') }}</p>
         <F1Button size="sm" variant="ghost" :accent="'var(--drivers-primary)'" @click="resetFilters">
           {{ $t('drivers.filterAll') }}
         </F1Button>
-      </section>
-
-      <section v-if="pageCount > 1" class="drivers-pagination f1-reveal" style="--reveal-delay: 220ms">
-        <div class="drivers-pagination__inner">
-          <F1Button
-            class="drivers-pagination__btn"
-            size="sm"
-            square
-            type="button"
-            :disabled="currentPage === 1"
-            @click="previousPage"
-          >
-            <span class="material-symbols-outlined">chevron_left</span>
-          </F1Button>
-          <F1Button
-            v-for="page in pages"
-            :key="page"
-            class="drivers-pagination__page"
-            size="sm"
-            square
-            :active="page === currentPage"
-            type="button"
-            @click="goToPage(page)"
-          >
-            {{ page }}
-          </F1Button>
-          <F1Button
-            class="drivers-pagination__btn"
-            size="sm"
-            square
-            type="button"
-            :disabled="currentPage === pageCount"
-            @click="nextPage"
-          >
-            <span class="material-symbols-outlined">chevron_right</span>
-          </F1Button>
-        </div>
-        <p class="drivers-pagination__meta">
-          {{ currentPage }} / {{ pageCount }} · {{ filteredDrivers.length }}
-        </p>
       </section>
     </div>
     <TopTip :open="tipOpen" :message="tipMessage" />
@@ -245,8 +205,6 @@ const store = useStore<RootState>()
 const activeFilter = ref<FilterKey>('all')
 const eraFilter = ref<EraKey>('2025')
 const sortKey = ref<SortKey>('championships')
-const currentPage = ref(1)
-const pageSize = 12
 const championshipSlots = 7
 const tipOpen = ref(false)
 const tipMessage = ref('')
@@ -301,19 +259,7 @@ const overviewItems = computed(() => {
   ]
 })
 
-const pageCount = computed(() => Math.max(1, Math.ceil(sortedDrivers.value.length / pageSize)))
-const pages = computed(() => Array.from({ length: pageCount.value }, (_, index) => index + 1))
-const pagedDrivers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-  return sortedDrivers.value.slice(start, start + pageSize)
-})
-
-watch(sortKey, () => {
-  currentPage.value = 1
-})
-
 watch(eraFilter, () => {
-  currentPage.value = 1
   if (eraFilter.value !== 'legend' && activeFilter.value === 'legends') {
     activeFilter.value = 'all'
   }
@@ -321,26 +267,12 @@ watch(eraFilter, () => {
 
 const setFilter = (next: FilterKey) => {
   activeFilter.value = next
-  currentPage.value = 1
-}
-
-const goToPage = (page: number) => {
-  currentPage.value = page
-}
-
-const previousPage = () => {
-  currentPage.value = Math.max(1, currentPage.value - 1)
-}
-
-const nextPage = () => {
-  currentPage.value = Math.min(pageCount.value, currentPage.value + 1)
 }
 
 const resetFilters = () => {
   activeFilter.value = 'all'
   sortKey.value = 'championships'
   eraFilter.value = '2025'
-  currentPage.value = 1
 }
 
 const formatYears = (driver: Driver) =>
@@ -1074,15 +1006,6 @@ const handleCardClick = (driver: Driver) => {
   border-bottom: 2px solid var(--accent-soft);
 }
 
-.drivers-pagination {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 8px;
-}
-
 .drivers-empty {
   padding: 24px 16px 16px;
   text-align: center;
@@ -1097,52 +1020,6 @@ const handleCardClick = (driver: Driver) => {
 .drivers-empty .material-symbols-outlined {
   font-size: 28px;
   color: #64748b;
-}
-
-.drivers-pagination__inner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.drivers-pagination__meta {
-  margin: 0;
-  font-family: var(--drivers-font-display);
-  color: #9ca3af;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-}
-
-:deep(.drivers-pagination__btn),
-:deep(.drivers-pagination__page) {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  border: 1px solid var(--drivers-border);
-  background: #151a23;
-  color: #9ca3af;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-:deep(.drivers-pagination__btn:hover),
-:deep(.drivers-pagination__page:hover) {
-  border-color: var(--drivers-primary);
-  color: var(--drivers-primary);
-}
-
-:deep(.drivers-pagination__page.is-active) {
-  background: var(--drivers-primary);
-  color: #fff;
-  border-color: var(--drivers-primary);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-}
-
-:deep(.drivers-pagination__btn:disabled) {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 @media (min-width: 768px) {
