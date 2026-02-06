@@ -26,4 +26,28 @@ const router = createRouter({
   routes,
 })
 
+const CHUNK_RELOAD_KEY = 'f1_chunk_reload_once'
+
+router.onError((error, to) => {
+  const message = error instanceof Error ? error.message : String(error)
+  const isChunkLoadError =
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('Loading chunk')
+
+  if (!isChunkLoadError) return
+
+  const hasReloaded = sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1'
+  if (hasReloaded) return
+
+  sessionStorage.setItem(CHUNK_RELOAD_KEY, '1')
+  const target = to?.fullPath || '/home'
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+  window.location.assign(`${base}${target}`)
+})
+
+router.afterEach(() => {
+  sessionStorage.removeItem(CHUNK_RELOAD_KEY)
+})
+
 export default router
