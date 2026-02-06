@@ -1,10 +1,10 @@
 <template>
   <div class="f1-telemetry f1-card">
     <div class="f1-telemetry__header">
-      <h3>
-        {{ $t('tracks.title') }}
-        <span>{{ activeTrack?.name || 'V.2.0' }}</span>
-      </h3>
+      <div class="f1-telemetry__title">
+        <p class="f1-kicker">{{ $t('tracks.title') }}</p>
+        <h3>{{ activeTrack?.name || $t('tracks.circuitMap') }}</h3>
+      </div>
       <F1Button
         class="f1-telemetry__action"
         variant="ghost"
@@ -74,28 +74,23 @@ defineProps<{
 <style scoped lang="scss">
 .f1-telemetry {
   overflow: hidden;
+  padding-bottom: 10px;
 }
 
 .f1-telemetry__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 14px 18px;
+  background: linear-gradient(90deg, rgba(0, 243, 255, 0.06), rgba(255, 255, 255, 0.02));
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.f1-telemetry__header h3 {
+.f1-telemetry__title h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: 0.1em;
-}
-
-.f1-telemetry__header h3 span {
-  font-size: 10px;
-  margin-left: 8px;
-  color: var(--neon-blue);
 }
 
 :deep(.f1-telemetry__action) {
@@ -113,7 +108,7 @@ defineProps<{
   position: relative;
   aspect-ratio: 21 / 9;
   background: #080a0f;
-  padding: 28px;
+  padding: 24px;
   overflow: hidden;
 }
 
@@ -147,7 +142,13 @@ defineProps<{
   height: 100%;
   object-fit: contain;
   opacity: 0.85;
+  transition: transform var(--duration-base) var(--ease-standard), filter var(--duration-base) var(--ease-standard);
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+}
+
+.f1-telemetry__map:hover img {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.52));
 }
 
 .f1-telemetry__marker {
@@ -190,7 +191,7 @@ defineProps<{
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-fast) var(--ease-standard);
 }
 
 .f1-telemetry__map:hover .f1-telemetry__tooltip {
@@ -203,7 +204,7 @@ defineProps<{
   justify-content: space-between;
   gap: 16px;
   padding: 14px 16px;
-  margin: 12px 0 0;
+  margin: 12px 12px 0;
   border-radius: 10px;
   background: linear-gradient(90deg, rgba(0, 243, 255, 0.08), rgba(255, 255, 255, 0));
   border: 1px solid rgba(0, 243, 255, 0.15);
@@ -262,12 +263,18 @@ defineProps<{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  margin-top: 10px;
 }
 
 .f1-telemetry__metric {
   padding: 14px;
   text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.f1-telemetry__metric:last-child {
+  border-right: none;
 }
 
 .f1-telemetry__metric span {
@@ -288,5 +295,43 @@ defineProps<{
 
 .f1-telemetry__metric strong span {
   font-size: 10px;
+}
+
+@media (max-width: 860px) {
+  .f1-telemetry__header {
+    padding: 12px 12px;
+  }
+
+  .f1-telemetry__title h3 {
+    font-size: 15px;
+  }
+
+  .f1-telemetry__map {
+    padding: 14px;
+  }
+
+  .f1-telemetry__marker {
+    top: 36%;
+    left: 22%;
+  }
+
+  .f1-telemetry__tagline {
+    margin: 10px 8px 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .f1-telemetry__metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .f1-telemetry__metric {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .f1-telemetry__metric:last-child {
+    border-bottom: none;
+  }
 }
 </style>

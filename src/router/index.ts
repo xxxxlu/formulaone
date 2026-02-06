@@ -17,7 +17,6 @@ const routes: RouteRecordRaw[] = [
   { path: '/lottery', name: 'lottery', component: () => import('../views/lottery.vue') },
   { path: '/rag', name: 'rag', component: () => import('../views/rag.vue') },
   { path: '/not-found', name: 'not-found', component: () => import('../views/not-found.vue') },
-  { path: '/', redirect: '/home' },
   { path: '/:pathMatch(.*)*', redirect: '/not-found' },
 ]
 

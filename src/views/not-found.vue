@@ -2,12 +2,29 @@
   <div class="notfound">
     <div class="card">
       <p class="code">404</p>
-      <h1 class="title">Oops, too early!</h1>
-      <p class="subtitle">The gift draw unlocks after the Christmas card finishes. Please head back and try again.</p>
-      <router-link class="btn" to="/home">Back to Home</router-link>
+      <h1 class="title">Page Not Found</h1>
+      <p class="subtitle">The page you requested does not exist or has been moved.</p>
+      <div class="actions">
+        <button class="btn btn--ghost" type="button" @click="goBack">Go Back</button>
+        <router-link class="btn" to="/home">Back to Home</router-link>
+      </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+    return
+  }
+  router.push('/home')
+}
+</script>
 
 <style scoped>
 .notfound {
@@ -45,6 +62,13 @@
   color: #9fb0c8;
   line-height: 1.5;
 }
+.actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .btn {
   display: inline-flex;
   align-items: center;
@@ -62,5 +86,14 @@
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 34px rgba(255, 107, 107, 0.45);
+}
+.btn--ghost {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e9f0ff;
+  box-shadow: none;
+}
+.btn--ghost:hover {
+  box-shadow: none;
 }
 </style>

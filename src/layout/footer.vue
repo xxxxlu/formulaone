@@ -3,7 +3,7 @@
     <div class="f1-footer__bg"></div>
     <div class="f1-container f1-footer__inner">
       <div class="f1-footer__grid">
-        <div class="f1-footer__brand card-float">
+        <div class="f1-footer__brand card-float f1-reveal" style="--reveal-delay: 60ms">
           <img class="f1-footer__logo" :src="logo" alt="F1 logo" />
           <div>
             <div class="f1-footer__title">{{ $t('footer.title') }}</div>
@@ -12,7 +12,7 @@
           </div>
         </div>
 
-        <div class="f1-footer__column">
+        <div class="f1-footer__column f1-reveal" style="--reveal-delay: 130ms">
           <h4 class="f1-footer__heading">{{ $t('footer.links') }}</h4>
           <div class="f1-footer__links">
             <RouterLink to="/home">{{ $t('nav.home') }}</RouterLink>
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <div class="f1-footer__column">
+        <div class="f1-footer__column f1-reveal" style="--reveal-delay: 190ms">
           <h4 class="f1-footer__heading">{{ $t('footer.contact') }}</h4>
           <div class="f1-footer__contact">
             <a href="mailto:xlu021104@gmail.com">
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <div class="f1-footer__column">
+        <div class="f1-footer__column f1-reveal" style="--reveal-delay: 250ms">
           <h4 class="f1-footer__heading">{{ $t('footer.social') }}</h4>
           <div class="f1-footer__social">
             <a class="f1-footer__icon" href="#" :aria-label="$t('footer.socialGlobal')">
@@ -90,9 +90,20 @@ const hideFooter = computed(() => route.path === '/christmas')
   position: relative;
   z-index: 1;
   padding: 40px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, #0b0e14, #090c12);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(8, 11, 16, 0.96), rgba(6, 8, 12, 0.98));
   overflow: hidden;
+}
+
+.f1-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 243, 255, 0), rgba(0, 243, 255, 0.85), rgba(255, 0, 60, 0.8), rgba(255, 0, 60, 0));
+  opacity: 0.65;
 }
 
 .f1-footer__bg {
@@ -101,7 +112,7 @@ const hideFooter = computed(() => route.path === '/christmas')
   background-size: 40px 40px;
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  opacity: 0.08;
+  opacity: 0.07;
   pointer-events: none;
 }
 
@@ -124,10 +135,10 @@ const hideFooter = computed(() => route.path === '/christmas')
   gap: 14px;
   font-family: var(--font-display);
   padding: 16px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow: var(--shadow-soft);
   position: relative;
   overflow: hidden;
 }
@@ -136,6 +147,11 @@ const hideFooter = computed(() => route.path === '/christmas')
   height: 26px;
   width: auto;
   filter: drop-shadow(0 0 10px rgba(225, 6, 0, 0.35));
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.f1-footer__brand:hover .f1-footer__logo {
+  transform: translateY(-1px) scale(1.03);
 }
 
 .f1-footer__title {
@@ -190,10 +206,14 @@ const hideFooter = computed(() => route.path === '/christmas')
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-muted);
-  transition: all 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
 }
 
 .f1-footer__icon:hover {
+  transform: translateY(-2px);
   border-color: var(--neon-blue);
   color: var(--neon-blue);
   background: rgba(0, 243, 255, 0.1);
@@ -209,12 +229,15 @@ const hideFooter = computed(() => route.path === '/christmas')
   font-family: var(--font-tech);
   color: var(--text-muted);
   letter-spacing: 0.04em;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    text-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .f1-footer__links a:hover {
   color: #fff;
-  transform: translateX(2px);
+  transform: translateX(3px);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.28);
 }
 
 .f1-footer__contact {
@@ -230,7 +253,8 @@ const hideFooter = computed(() => route.path === '/christmas')
   color: var(--text-muted);
   font-family: var(--font-tech);
   letter-spacing: 0.05em;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
 }
 
 .f1-footer__contact a:hover {
@@ -249,7 +273,7 @@ const hideFooter = computed(() => route.path === '/christmas')
   color: var(--text-dim);
   font-family: var(--font-tech);
   letter-spacing: 0.05em;
-  transition: color 0.2s ease;
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 .f1-footer__legal a:hover {

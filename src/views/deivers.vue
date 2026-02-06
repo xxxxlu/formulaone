@@ -2,15 +2,15 @@
   <main class="drivers-page">
     <div class="drivers-layout">
       <div class="drivers-breadcrumb">
-        <a href="#">
+        <RouterLink to="/home">
           <span class="material-symbols-outlined">grid_view</span>
           {{ $t('drivers.breadcrumbHub') }}
-        </a>
+        </RouterLink>
         <span>/</span>
         <span>{{ $t('drivers.breadcrumbRoster') }}</span>
       </div>
 
-      <section class="drivers-header">
+      <section class="drivers-header f1-reveal" style="--reveal-delay: 50ms">
         <div>
           <h1 class="drivers-title">
             <span>{{ $t('drivers.titlePrefix') }}</span> <strong>{{ $t('drivers.titleStrong') }}</strong>
@@ -26,7 +26,15 @@
         </div>
       </section>
 
-      <section class="drivers-filters">
+      <section class="drivers-overview f1-reveal" style="--reveal-delay: 90ms">
+        <article v-for="item in overviewItems" :key="item.label" class="drivers-overview__item">
+          <span class="drivers-overview__label">{{ item.label }}</span>
+          <strong class="drivers-overview__value">{{ item.value }}</strong>
+          <span class="drivers-overview__meta">{{ item.meta }}</span>
+        </article>
+      </section>
+
+      <section class="drivers-filters f1-reveal" style="--reveal-delay: 130ms">
         <div class="drivers-era">
           <label for="driver-era">{{ $t('drivers.rosterLabel') }}</label>
           <F1Select
@@ -61,11 +69,11 @@
 
       <section class="drivers-grid">
         <div
-          v-for="driver in pagedDrivers"
+          v-for="(driver, idx) in pagedDrivers"
           :key="driver.id"
-          class="driver-card"
+          class="driver-card f1-reveal"
           :class="{ 'driver-card--legend': driver.status === 'legend' }"
-          :style="cardStyle(driver)"
+          :style="{ ...cardStyle(driver), '--reveal-delay': `${120 + idx * 28}ms` }"
           role="button"
           tabindex="0"
           :aria-disabled="driver.status === 'legend'"
@@ -150,11 +158,15 @@
         </div>
       </section>
 
-      <section v-if="!pagedDrivers.length" class="drivers-empty">
+      <section v-if="!pagedDrivers.length" class="drivers-empty f1-surface f1-reveal" style="--reveal-delay: 180ms">
+        <span class="material-symbols-outlined">sentiment_dissatisfied</span>
         <p>{{ $t('drivers.emptyRoster') }}</p>
+        <F1Button size="sm" variant="ghost" :accent="'var(--drivers-primary)'" @click="resetFilters">
+          {{ $t('drivers.filterAll') }}
+        </F1Button>
       </section>
 
-      <section v-if="pageCount > 1" class="drivers-pagination">
+      <section v-if="pageCount > 1" class="drivers-pagination f1-reveal" style="--reveal-delay: 220ms">
         <div class="drivers-pagination__inner">
           <F1Button
             class="drivers-pagination__btn"
@@ -189,6 +201,9 @@
             <span class="material-symbols-outlined">chevron_right</span>
           </F1Button>
         </div>
+        <p class="drivers-pagination__meta">
+          {{ currentPage }} / {{ pageCount }} · {{ filteredDrivers.length }}
+        </p>
       </section>
     </div>
     <TopTip :open="tipOpen" :message="tipMessage" />
@@ -238,12 +253,15 @@ const tipMessage = ref('')
 let tipTimer: number | null = null
 
 const drivers = computed(() => store.state.drivers)
-
-const filteredDrivers = computed(() => {
-  const listByEra = drivers.value.filter((driver) => {
+const driversInEra = computed(() =>
+  drivers.value.filter((driver) => {
     if (eraFilter.value === 'legend') return driver.era === 'legend'
     return driver.era === eraFilter.value
   })
+)
+
+const filteredDrivers = computed(() => {
+  const listByEra = driversInEra.value
 
   if (activeFilter.value === 'active') {
     return listByEra.filter((driver) => driver.status === 'active')
@@ -270,6 +288,19 @@ const sortedDrivers = computed(() => {
   return list.sort((a, b) => b.championships - a.championships)
 })
 
+const overviewItems = computed(() => {
+  const list = driversInEra.value
+  const champions = list.filter((driver) => driver.championships > 0).length
+  const active = list.filter((driver) => driver.status === 'active').length
+  const legends = list.filter((driver) => driver.status === 'legend').length
+  return [
+    { label: t('drivers.filterAll'), value: list.length, meta: `${eraFilter.value.toUpperCase()} ROSTER` },
+    { label: t('drivers.filterActive'), value: active, meta: t('drivers.cardStatusActive') },
+    { label: t('drivers.filterChampions'), value: champions, meta: t('drivers.cardWorldChampionships') },
+    { label: t('drivers.filterLegends'), value: legends, meta: t('drivers.cardStatusEternal') },
+  ]
+})
+
 const pageCount = computed(() => Math.max(1, Math.ceil(sortedDrivers.value.length / pageSize)))
 const pages = computed(() => Array.from({ length: pageCount.value }, (_, index) => index + 1))
 const pagedDrivers = computed(() => {
@@ -279,6 +310,13 @@ const pagedDrivers = computed(() => {
 
 watch(sortKey, () => {
   currentPage.value = 1
+})
+
+watch(eraFilter, () => {
+  currentPage.value = 1
+  if (eraFilter.value !== 'legend' && activeFilter.value === 'legends') {
+    activeFilter.value = 'all'
+  }
 })
 
 const setFilter = (next: FilterKey) => {
@@ -296,6 +334,13 @@ const previousPage = () => {
 
 const nextPage = () => {
   currentPage.value = Math.min(pageCount.value, currentPage.value + 1)
+}
+
+const resetFilters = () => {
+  activeFilter.value = 'all'
+  sortKey.value = 'championships'
+  eraFilter.value = '2025'
+  currentPage.value = 1
 }
 
 const formatYears = (driver: Driver) =>
@@ -379,7 +424,7 @@ const handleCardClick = (driver: Driver) => {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
 }
 
 .drivers-breadcrumb {
@@ -421,6 +466,7 @@ const handleCardClick = (driver: Driver) => {
   padding-bottom: 24px;
   border-bottom: 1px solid var(--drivers-border);
   position: relative;
+  margin-top: 4px;
 }
 
 .drivers-header::after {
@@ -470,6 +516,45 @@ const handleCardClick = (driver: Driver) => {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.drivers-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.drivers-overview__item {
+  padding: 11px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+}
+
+.drivers-overview__label {
+  display: block;
+  font-family: var(--drivers-font-display);
+  color: #9ca3af;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.drivers-overview__value {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--drivers-font-display);
+  font-size: 20px;
+  color: #f8fafc;
+}
+
+.drivers-overview__meta {
+  display: block;
+  margin-top: 2px;
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--drivers-primary);
 }
 
 .drivers-status {
@@ -524,6 +609,10 @@ const handleCardClick = (driver: Driver) => {
 
 .drivers-filters {
   display: flex;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
@@ -987,22 +1076,41 @@ const handleCardClick = (driver: Driver) => {
 
 .drivers-pagination {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   justify-content: center;
   margin-top: 8px;
 }
 
 .drivers-empty {
-  padding: 24px 0 12px;
+  padding: 24px 16px 16px;
   text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
   color: #9ca3af;
   font-family: var(--drivers-font-display);
   letter-spacing: 0.08em;
+}
+
+.drivers-empty .material-symbols-outlined {
+  font-size: 28px;
+  color: #64748b;
 }
 
 .drivers-pagination__inner {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.drivers-pagination__meta {
+  margin: 0;
+  font-family: var(--drivers-font-display);
+  color: #9ca3af;
+  font-size: 11px;
+  letter-spacing: 0.14em;
 }
 
 :deep(.drivers-pagination__btn),
@@ -1056,6 +1164,30 @@ const handleCardClick = (driver: Driver) => {
 @media (min-width: 1280px) {
   .drivers-grid {
     grid-template-columns: repeat(4, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .drivers-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .drivers-page {
+    padding: 24px 14px 52px;
+  }
+
+  .drivers-layout {
+    gap: 14px;
+  }
+
+  .drivers-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .drivers-filters {
+    padding: 10px;
   }
 }
 </style>

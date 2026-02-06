@@ -45,12 +45,16 @@ const barWidth = (points: number) => `${Math.round((points / Math.max(props.maxP
 </script>
 
 <style scoped lang="scss">
+.f1-standings {
+  padding: 10px 10px 12px;
+}
+
 .f1-standings__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 14px 14px 12px;
+  background: linear-gradient(90deg, rgba(0, 243, 255, 0.07), rgba(255, 255, 255, 0));
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -79,7 +83,7 @@ const barWidth = (points: number) => `${Math.round((points / Math.max(props.maxP
 .f1-standings__list--scroll {
   max-height: 420px;
   overflow-y: auto;
-  padding: 6px 6px 10px;
+  padding: 10px 4px 6px;
 }
 
 .f1-standings__item {
@@ -94,6 +98,9 @@ const barWidth = (points: number) => `${Math.round((points / Math.max(props.maxP
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: visible;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .f1-standings__item::before {
@@ -109,6 +116,12 @@ const barWidth = (points: number) => `${Math.round((points / Math.max(props.maxP
 
 .f1-standings__item:hover::before {
   transform: scaleY(1);
+}
+
+.f1-standings__item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
 }
 
 .f1-standings__rank {
@@ -202,5 +215,20 @@ const barWidth = (points: number) => `${Math.round((points / Math.max(props.maxP
   max-height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+@media (max-width: 860px) {
+  .f1-standings {
+    padding: 6px;
+  }
+
+  .f1-standings__item {
+    grid-template-columns: 34px 40px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .f1-standings__teamlogo {
+    display: none;
+  }
 }
 </style>

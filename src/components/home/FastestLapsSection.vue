@@ -39,14 +39,17 @@ defineProps<{
 
 <style scoped lang="scss">
 .f1-fastlaps {
-  padding: 16px 18px 18px;
+  padding: 10px 10px 12px;
 }
 
 .f1-fastlaps__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+  padding: 8px 8px 12px;
+  background: linear-gradient(90deg, rgba(255, 65, 199, 0.09), rgba(255, 255, 255, 0));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .f1-fastlaps__header h4 {
@@ -70,7 +73,7 @@ defineProps<{
   gap: 10px;
   max-height: 420px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding: 10px 4px 6px;
 }
 
 .f1-fastlap {
@@ -84,6 +87,9 @@ defineProps<{
   border: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
   overflow: hidden;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .f1-fastlap::before {
@@ -99,6 +105,12 @@ defineProps<{
 
 .f1-fastlap:hover::before {
   transform: scaleY(1);
+}
+
+.f1-fastlap:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
 }
 
 .f1-fastlap__round {
@@ -196,5 +208,20 @@ defineProps<{
   max-height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+@media (max-width: 860px) {
+  .f1-fastlaps {
+    padding: 6px;
+  }
+
+  .f1-fastlap {
+    grid-template-columns: 56px 40px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .f1-fastlap__teamlogo {
+    display: none;
+  }
 }
 </style>

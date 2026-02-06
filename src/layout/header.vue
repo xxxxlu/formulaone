@@ -1,5 +1,5 @@
 <template>
-  <header v-show="!hideHeader" :class="['f1-header', { 'is-solid': scrolled }]">
+  <header v-show="!hideHeader" :class="['f1-header', { 'is-solid': scrolled, 'has-drawer': mobileOpen }]">
     <div class="f1-container f1-header__inner">
       <div class="f1-header__brand">
         <RouterLink class="f1-logo" to="/">
@@ -207,19 +207,40 @@ watch(
   position: sticky;
   top: 0;
   z-index: 40;
-  padding: 16px 24px;
-  background: rgba(10, 10, 18, 0);
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  isolation: isolate;
+  padding: 14px 24px;
+  background: linear-gradient(180deg, rgba(7, 10, 15, 0.38), rgba(7, 10, 15, 0));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: none;
-  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  transition: background var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    border-color var(--duration-base) var(--ease-standard),
+    backdrop-filter var(--duration-base) var(--ease-standard);
   backdrop-filter: blur(0px);
 }
 
 .f1-header.is-solid {
-  background: linear-gradient(90deg, rgba(9, 14, 24, 0.95), rgba(12, 22, 34, 0.9));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(8px);
+  background: linear-gradient(96deg, rgba(8, 12, 18, 0.96), rgba(12, 21, 31, 0.94) 54%, rgba(9, 13, 18, 0.97));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(10px);
+}
+
+.f1-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 12% -40%, rgba(0, 243, 255, 0.2), transparent 46%),
+    radial-gradient(circle at 88% -50%, rgba(255, 0, 60, 0.16), transparent 45%);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
+  pointer-events: none;
+}
+
+.f1-header.is-solid::before,
+.f1-header.has-drawer::before {
+  opacity: 1;
 }
 
 .f1-header__inner {
@@ -243,9 +264,16 @@ watch(
 }
 
 .f1-logo__img {
-  height: 32px;
+  height: 30px;
   width: auto;
   filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.35));
+  transition: transform var(--duration-fast) var(--ease-standard),
+    filter var(--duration-fast) var(--ease-standard);
+}
+
+.f1-logo:hover .f1-logo__img {
+  transform: translateY(-1px) scale(1.02);
+  filter: drop-shadow(0 0 14px rgba(0, 243, 255, 0.45));
 }
 
 .f1-nav {
@@ -266,7 +294,9 @@ watch(
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--text-dim);
-  transition: color 0.2s ease, transform 0.15s ease, text-shadow 0.2s ease;
+  transition: color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    text-shadow var(--duration-fast) var(--ease-standard);
   overflow: hidden;
 }
 
@@ -280,7 +310,7 @@ watch(
   background: var(--neon-blue);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-standard);
   box-shadow: var(--shadow-blue);
   filter: drop-shadow(0 0 6px rgba(0, 243, 255, 0.6));
 }
@@ -294,7 +324,7 @@ watch(
   height: 16px;
   background: radial-gradient(60% 100% at 20% 100%, rgba(0, 243, 255, 0.25), transparent 70%);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-standard);
 }
 
 .f1-nav__car {
@@ -323,7 +353,7 @@ watch(
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--neon-blue), rgba(255, 255, 255, 0));
   opacity: 0;
   box-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
-  transition: width 0.35s ease, opacity 0.2s ease;
+  transition: width var(--duration-base) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard);
 }
 
 .f1-nav__link:hover .f1-nav__trail,
@@ -404,7 +434,7 @@ watch(
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
@@ -420,9 +450,14 @@ watch(
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   letter-spacing: 0.08em;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.f1-user__logout:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .f1-actions {
@@ -434,8 +469,9 @@ watch(
 .f1-locale {
   display: inline-flex;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .f1-locale button {
@@ -446,6 +482,13 @@ watch(
   cursor: pointer;
   font-family: var(--font-tech);
   letter-spacing: 0.14em;
+  transition: background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.f1-locale button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .f1-locale button.active {
@@ -571,8 +614,8 @@ watch(
 .f1-mobile-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(2px);
+  background: rgba(3, 4, 8, 0.6);
+  backdrop-filter: blur(3px);
   z-index: 80;
 }
 
@@ -654,14 +697,15 @@ watch(
   right: 0;
   width: min(320px, 80vw);
   height: 100vh;
-  background: rgba(10, 10, 15, 0.96);
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: -12px 0 24px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(10, 14, 20, 0.98), rgba(7, 10, 16, 0.98));
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -16px 0 36px rgba(0, 0, 0, 0.42);
   z-index: 90;
   display: flex;
   flex-direction: column;
   padding: 16px;
   gap: 12px;
+  overflow-y: auto;
 }
 
 .f1-mobile-drawer__header {
@@ -690,21 +734,27 @@ watch(
   align-items: center;
   justify-content: space-between;
   padding: 12px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
   font-family: var(--font-display);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-muted);
-  transition: all 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .f1-mobile-link:hover,
 .f1-mobile-link.is-active {
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateX(-2px);
+  border-color: rgba(0, 243, 255, 0.3);
+  background: rgba(0, 243, 255, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
 }
 
 .f1-fade-enter-active,

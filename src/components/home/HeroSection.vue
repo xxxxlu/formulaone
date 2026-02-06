@@ -1,10 +1,13 @@
 <template>
   <section class="f1-hero">
     <div class="f1-container f1-hero__inner">
-      <div class="f1-hero__content">
+      <div class="f1-hero__content f1-reveal f1-reveal--left" style="--reveal-delay: 60ms">
         <div class="f1-hero__status">
           <span class="f1-hero__status-dot"></span>
           <span class="f1-hero__status-text">{{ $t('home.heroStatus') }}</span>
+          <span v-if="activeEvent" class="f1-hero__status-event">
+            {{ activeEvent.flag }} {{ eventTime }}
+          </span>
         </div>
         <h1 class="f1-hero__title">
           {{ $t('home.heroName') }}
@@ -16,17 +19,31 @@
         <div class="f1-hero__accent"></div>
         <p class="f1-hero__lead">{{ $t('home.heroLead') }}</p>
         <div class="f1-hero__actions">
-          <F1Button class="f1-hero__primary" variant="solid" size="lg" :accent="'var(--neon-blue)'" :textColor="'#000'">
+          <F1Button
+            class="f1-hero__primary"
+            variant="solid"
+            size="lg"
+            :accent="'var(--neon-blue)'"
+            :textColor="'#000'"
+            @click="goToDriverStory"
+          >
             {{ $t('home.heroCtaPrimary') }}
             <span class="material-symbols-outlined f1-hero__cta-icon">arrow_forward</span>
           </F1Button>
-          <F1Button class="f1-hero__ghost" variant="ghost" size="lg" :accent="'var(--neon-red)'">
+          <F1Button class="f1-hero__ghost" variant="ghost" size="lg" :accent="'var(--neon-red)'" @click="goToChampions">
             <span class="material-symbols-outlined f1-hero__cta-icon f1-hero__cta-icon--red">play_circle</span>
             {{ $t('home.heroCtaSecondary') }}
           </F1Button>
         </div>
+        <div class="f1-hero__pulse-grid">
+          <article v-for="item in pulseItems" :key="item.label" class="f1-hero__pulse-item">
+            <span class="f1-hero__pulse-label">{{ item.label }}</span>
+            <strong class="f1-hero__pulse-value">{{ item.value }}</strong>
+            <span class="f1-hero__pulse-detail">{{ item.detail }}</span>
+          </article>
+        </div>
       </div>
-      <div class="f1-hero__visual">
+      <div class="f1-hero__visual f1-reveal f1-reveal--right" style="--reveal-delay: 120ms">
         <div class="f1-orbits">
           <div class="f1-orbit f1-orbit--primary"></div>
           <div class="f1-orbit f1-orbit--secondary"></div>
@@ -59,7 +76,40 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import F1Button from '../F1Button.vue'
+import type { CountdownEventWithTs, HeroPulse } from './types'
+
+const props = defineProps<{
+  activeEvent: CountdownEventWithTs | null
+  pulseItems: HeroPulse[]
+}>()
+
+const router = useRouter()
+const { locale } = useI18n()
+
+const eventTime = computed(() => {
+  const start = props.activeEvent?.start
+  if (!start) return '--'
+  const parsed = new Date(start)
+  if (Number.isNaN(parsed.getTime())) return '--'
+  return new Intl.DateTimeFormat(locale.value === 'zh' ? 'zh-CN' : 'en-US', {
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(parsed)
+})
+
+const goToDriverStory = () => {
+  router.push('/drivers/lando-norris')
+}
+
+const goToChampions = () => {
+  router.push('/champions')
+}
 </script>
 
 <style scoped lang="scss">
@@ -89,7 +139,7 @@ import F1Button from '../F1Button.vue'
 .f1-hero {
   position: relative;
   z-index: 1;
-  padding: 48px 24px 90px;
+  padding: 52px 24px 94px;
 }
 
 .f1-hero__inner {
@@ -107,6 +157,7 @@ import F1Button from '../F1Button.vue'
 .f1-hero__status {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   color: var(--neon-red);
   font-family: var(--font-tech);
@@ -131,6 +182,16 @@ import F1Button from '../F1Button.vue'
   border: 1px solid rgba(255, 0, 60, 0.5);
   border-radius: 50%;
   animation: ping 1.6s ease-out infinite;
+}
+
+.f1-hero__status-event {
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #dbe4ec;
+  letter-spacing: 0.14em;
+  font-size: 10px;
 }
 
 .f1-hero__title {
@@ -180,6 +241,47 @@ import F1Button from '../F1Button.vue'
   gap: 16px;
 }
 
+.f1-hero__pulse-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.f1-hero__pulse-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+
+.f1-hero__pulse-label {
+  display: block;
+  font-family: var(--font-tech);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.f1-hero__pulse-value {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: #f8fbff;
+}
+
+.f1-hero__pulse-detail {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-tech);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
 .f1-hero__visual {
   position: relative;
   display: grid;
@@ -227,7 +329,7 @@ import F1Button from '../F1Button.vue'
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow-hard);
   overflow: hidden;
 }
 
@@ -351,6 +453,43 @@ import F1Button from '../F1Button.vue'
 @media (min-width: 1024px) {
   .f1-hero__inner {
     grid-template-columns: 5fr 7fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .f1-hero {
+    padding: 42px 18px 76px;
+  }
+
+  .f1-hero__inner {
+    gap: 30px;
+  }
+
+  .f1-hero__content {
+    gap: 16px;
+  }
+
+  .f1-hero__lead {
+    max-width: 100%;
+    font-size: 15px;
+  }
+
+  .f1-hero__pulse-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .f1-hero-card__stat--left {
+    top: 18px;
+    left: 16px;
+  }
+
+  .f1-hero-card__stat--right {
+    right: 16px;
+    bottom: 18px;
+  }
+
+  .f1-stat__value {
+    font-size: 16px;
   }
 }
 </style>

@@ -67,7 +67,7 @@ defineEmits<{
 
 .f1-track-modal__content {
   width: min(1080px, 100%);
-  background: #0b0e14;
+  background: linear-gradient(170deg, rgba(11, 14, 20, 0.96), rgba(8, 11, 16, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
@@ -132,6 +132,17 @@ defineEmits<{
 .fade-blur-enter-active,
 .fade-blur-leave-active {
   transition: opacity 0.25s ease;
+}
+
+.fade-blur-enter-active .f1-track-modal__content,
+.fade-blur-leave-active .f1-track-modal__content {
+  transition: transform 0.28s var(--ease-standard), opacity 0.28s var(--ease-standard);
+}
+
+.fade-blur-enter-from .f1-track-modal__content,
+.fade-blur-leave-to .f1-track-modal__content {
+  transform: translateY(12px) scale(0.985);
+  opacity: 0;
 }
 
 .fade-blur-enter-from,

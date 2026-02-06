@@ -1,116 +1,141 @@
 <template>
   <main class="teams-page">
-    <section class="teams-hero">
-      <div class="teams-breadcrumb">
-        <span class="teams-crumb">{{ $t('teams.breadcrumbRoot') }}</span>
-        <span class="teams-crumb-sep">/</span>
-        <span class="teams-crumb teams-crumb--active">{{ $t('teams.breadcrumbActive') }}</span>
-      </div>
-      <div class="teams-hero__content">
-        <div class="teams-hero__text">
-          <div class="teams-hero__pulse"></div>
-          <h1>{{ $t('teams.title') }}</h1>
-          <p>{{ $t('teams.subtitle') }}</p>
+    <div class="teams-layout">
+      <section class="teams-hero f1-reveal" style="--reveal-delay: 50ms">
+        <div class="teams-breadcrumb">
+          <RouterLink class="teams-crumb-link" to="/home">
+            <span class="material-symbols-outlined">grid_view</span>
+            {{ $t('teams.breadcrumbRoot') }}
+          </RouterLink>
+          <span class="teams-crumb-sep">/</span>
+          <span class="teams-crumb teams-crumb--active">{{ $t('teams.breadcrumbActive') }}</span>
         </div>
-        <div class="teams-hero__stat">
-          <span class="material-symbols-outlined">dns</span>
-          <div>
-            <span class="teams-hero__stat-label">{{ $t('teams.active') }}</span>
-            <span class="teams-hero__stat-value">{{ teams.length }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="teams-actions">
-        <div class="teams-search">
-          <span class="material-symbols-outlined">search</span>
-          <input v-model="query" :placeholder="$t('teams.search')" />
-        </div>
-        <div class="teams-filters">
-          <F1Select v-model="season" :options="seasonOptions" />
-          <F1Select v-model="sortKey" :options="sortOptions" />
-        </div>
-      </div>
-    </section>
 
-    <section class="teams-grid">
-      <RouterLink
-        v-for="team in filteredTeams"
-        :key="team.id"
-        class="team-card"
-        :style="cardStyle(team)"
-        :to="`/teams/${team.id}`"
-      >
-        <div class="team-card__glow"></div>
-        <div class="team-card__media">
-          <div class="team-card__grid"></div>
-          <div class="team-card__blur"></div>
-          <img v-if="team.logo" class="team-card__logo" :src="team.logo" :alt="team.name + ' logo'" loading="lazy" />
-          <img v-if="team.carImage" class="team-card__car" :src="team.carImage" :alt="team.name + ' car'" loading="lazy" />
-          <div class="team-card__underline"></div>
-        </div>
-        <div class="team-card__body">
-          <div class="team-card__header">
+        <div class="teams-hero__content">
+          <div class="teams-hero__text">
+            <div class="teams-hero__pulse"></div>
+            <h1>{{ $t('teams.title') }}</h1>
+            <p>{{ $t('teams.subtitle') }}</p>
+          </div>
+          <div class="teams-hero__stat">
+            <span class="material-symbols-outlined">dns</span>
             <div>
-              <p class="team-card__name">{{ team.name }}</p>
-              <p class="team-card__base">{{ team.base }}</p>
-            </div>
-            <div class="team-card__badge">#{{ team.rank }}</div>
-          </div>
-          <div class="team-card__stats">
-            <div class="team-card__stat">
-              <span>{{ $t('teams.statEstablished') }}</span>
-              <strong>{{ team.established }}</strong>
-            </div>
-            <div class="team-card__stat">
-              <span>{{ $t('teams.statTitles') }}</span>
-              <strong>{{ team.titles }}</strong>
+              <span class="teams-hero__stat-label">{{ $t('teams.active') }}</span>
+              <span class="teams-hero__stat-value">{{ filteredTeams.length }}</span>
             </div>
           </div>
-          <div v-if="team.drivers?.length" class="team-card__drivers">
-            <div
-              v-for="driverId in team.drivers"
-              :key="driverId"
-              class="team-card__driver"
-              :title="driverMap[driverId]?.name"
-            >
-              <div class="team-card__driver-img" v-if="driverMap[driverId]?.image">
-                <img :src="driverMap[driverId]?.image" :alt="driverMap[driverId]?.name" loading="lazy" />
-              </div>
-              <div v-else class="team-card__driver-placeholder">
-                {{ driverMap[driverId]?.name?.[0] ?? '?' }}
-              </div>
-              <div class="team-card__driver-meta">
-                <span class="team-card__driver-number">#{{ driverMap[driverId]?.number }}</span>
-                <span class="team-card__driver-name">{{ driverMap[driverId]?.name }}</span>
-              </div>
-            </div>
-          </div>
-          <F1Button
-            class="team-card__cta"
-            size="md"
-            :accent="team.color"
-            variant="ghost"
-            type="button"
-          >
-            {{ $t('teams.btnProfile') }}
-            <span class="material-symbols-outlined">chevron_right</span>
-          </F1Button>
         </div>
-      </RouterLink>
 
-    </section>
+        <div class="teams-actions">
+          <div class="teams-search">
+            <span class="material-symbols-outlined">search</span>
+            <input v-model="query" :placeholder="$t('teams.search')" />
+          </div>
+          <div class="teams-filters">
+            <F1Select v-model="season" :options="seasonOptions" />
+            <F1Select v-model="sortKey" :options="sortOptions" />
+          </div>
+        </div>
+      </section>
+
+      <section class="teams-overview f1-reveal" style="--reveal-delay: 90ms">
+        <article v-for="item in overviewItems" :key="item.label" class="teams-overview__item">
+          <span class="teams-overview__label">{{ item.label }}</span>
+          <strong class="teams-overview__value">{{ item.value }}</strong>
+          <span class="teams-overview__meta">{{ item.meta }}</span>
+        </article>
+      </section>
+
+      <section v-if="filteredTeams.length" class="teams-grid">
+        <RouterLink
+          v-for="(team, idx) in filteredTeams"
+          :key="team.id"
+          class="team-card f1-reveal"
+          :style="{ ...cardStyle(team), '--reveal-delay': `${130 + idx * 28}ms` }"
+          :to="`/teams/${team.id}`"
+        >
+          <div class="team-card__glow"></div>
+          <div class="team-card__media">
+            <div class="team-card__grid"></div>
+            <div class="team-card__blur"></div>
+            <img v-if="team.logo" class="team-card__logo" :src="team.logo" :alt="team.name + ' logo'" loading="lazy" />
+            <img v-if="team.carImage" class="team-card__car" :src="team.carImage" :alt="team.name + ' car'" loading="lazy" />
+            <div class="team-card__underline"></div>
+          </div>
+          <div class="team-card__body">
+            <div class="team-card__header">
+              <div>
+                <p class="team-card__name">{{ team.name }}</p>
+                <p class="team-card__base">{{ team.base }}</p>
+              </div>
+              <div class="team-card__badge">#{{ team.rank }}</div>
+            </div>
+            <div class="team-card__stats">
+              <div class="team-card__stat">
+                <span>{{ $t('teams.statEstablished') }}</span>
+                <strong>{{ team.established }}</strong>
+              </div>
+              <div class="team-card__stat">
+                <span>{{ $t('teams.statTitles') }}</span>
+                <strong>{{ team.titles }}</strong>
+              </div>
+            </div>
+            <div v-if="team.drivers?.length" class="team-card__drivers">
+              <div
+                v-for="driverId in team.drivers"
+                :key="driverId"
+                class="team-card__driver"
+                :title="driverMap[driverId]?.name"
+              >
+                <div class="team-card__driver-img" v-if="driverMap[driverId]?.image">
+                  <img :src="driverMap[driverId]?.image" :alt="driverMap[driverId]?.name" loading="lazy" />
+                </div>
+                <div v-else class="team-card__driver-placeholder">
+                  {{ driverMap[driverId]?.name?.[0] ?? '?' }}
+                </div>
+                <div class="team-card__driver-meta">
+                  <span class="team-card__driver-number">#{{ driverMap[driverId]?.number }}</span>
+                  <span class="team-card__driver-name">{{ driverMap[driverId]?.name }}</span>
+                </div>
+              </div>
+            </div>
+            <F1Button
+              class="team-card__cta"
+              size="md"
+              :accent="team.color"
+              variant="ghost"
+              type="button"
+            >
+              {{ $t('teams.btnProfile') }}
+              <span class="material-symbols-outlined">chevron_right</span>
+            </F1Button>
+          </div>
+        </RouterLink>
+      </section>
+
+      <section v-else class="teams-empty f1-surface f1-reveal" style="--reveal-delay: 160ms">
+        <span class="material-symbols-outlined">garage_home</span>
+        <p>{{ $t('teams.subtitle') }}</p>
+        <F1Button size="sm" variant="ghost" :accent="'var(--primary)'" @click="resetFilters">
+          {{ $t('drivers.filterAll') }}
+        </F1Button>
+      </section>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import F1Button from '../components/F1Button.vue'
 import F1Select from '../components/F1Select.vue'
 import type { RootState, Team } from '../store'
 
+type SortKey = 'rank' | 'titles' | 'name'
+
 const store = useStore<RootState>()
+const { t } = useI18n()
 
 const teams = computed(() => store.getters.teams as Team[])
 const driverMap = computed(() =>
@@ -122,16 +147,34 @@ const driverMap = computed(() =>
     {}
   )
 )
+
 const seasons = computed(() => {
-  const unique = new Set(teams.value.map((t) => t.season))
+  const unique = new Set(teams.value.map((team) => team.season))
   return Array.from(unique).sort((a, b) => b.localeCompare(a))
 })
 
-const { t } = useI18n()
-
-const season = ref<string>(seasons.value[0] ?? '')
+const season = ref<string>('')
 const query = ref('')
-const sortKey = ref<'rank' | 'titles' | 'name'>('rank')
+const sortKey = ref<SortKey>('rank')
+
+watch(
+  seasons,
+  (values) => {
+    if (!values.length) {
+      season.value = ''
+      return
+    }
+    if (!values.includes(season.value)) {
+      season.value = values[0] ?? ''
+    }
+  },
+  { immediate: true }
+)
+
+const seasonTeams = computed(() => {
+  const currentSeason = season.value
+  return teams.value.filter((team) => !currentSeason || team.season === currentSeason)
+})
 
 const seasonOptions = computed(() =>
   seasons.value.map((value) => ({
@@ -148,9 +191,7 @@ const sortOptions = computed(() => [
 
 const filteredTeams = computed(() => {
   const q = query.value.trim().toLowerCase()
-  const currentSeason = season.value
-  const filtered = teams.value.filter((team) => !currentSeason || team.season === currentSeason)
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = [...seasonTeams.value].sort((a, b) => {
     if (sortKey.value === 'rank') return a.rank - b.rank
     if (sortKey.value === 'titles') return b.titles - a.titles
     return a.name.localeCompare(b.name)
@@ -160,6 +201,43 @@ const filteredTeams = computed(() => {
     (team) => team.name.toLowerCase().includes(q) || team.base.toLowerCase().includes(q)
   )
 })
+
+const topTeam = computed(() => [...seasonTeams.value].sort((a, b) => a.rank - b.rank)[0] ?? null)
+const averageEstablished = computed(() => {
+  if (!seasonTeams.value.length) return '--'
+  const total = seasonTeams.value.reduce((sum, team) => sum + team.established, 0)
+  return String(Math.round(total / seasonTeams.value.length))
+})
+const titledTeamCount = computed(() => seasonTeams.value.filter((team) => team.titles > 0).length)
+
+const overviewItems = computed(() => [
+  {
+    label: t('teams.active'),
+    value: seasonTeams.value.length,
+    meta: `${t('teams.season')} ${season.value || '--'}`,
+  },
+  {
+    label: t('teams.sortTitles'),
+    value: titledTeamCount.value,
+    meta: t('teams.statTitles'),
+  },
+  {
+    label: t('teams.statEstablished'),
+    value: averageEstablished.value,
+    meta: topTeam.value?.base ?? '--',
+  },
+  {
+    label: t('teams.sortRank'),
+    value: topTeam.value ? `#${topTeam.value.rank}` : '--',
+    meta: topTeam.value?.name ?? '--',
+  },
+])
+
+const resetFilters = () => {
+  query.value = ''
+  sortKey.value = 'rank'
+  season.value = seasons.value[0] ?? ''
+}
 
 const cardStyle = (team: Team) => ({
   '--team-color': team.color,
@@ -182,24 +260,48 @@ const cardStyle = (team: Team) => ({
   color: var(--text);
 }
 
-.teams-hero {
+.teams-layout {
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+}
+
+.teams-hero {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
-  padding-bottom: 16px;
+  padding: 0 0 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .teams-breadcrumb {
   display: flex;
+  align-items: center;
   gap: 8px;
   font-family: var(--font-tech);
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.teams-crumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.teams-crumb-link:hover {
+  color: #fff;
+}
+
+.teams-crumb-link .material-symbols-outlined {
+  font-size: 15px;
 }
 
 .teams-crumb--active {
@@ -317,11 +419,47 @@ const cardStyle = (team: Team) => ({
   gap: 10px;
 }
 
-.teams-grid {
-  max-width: 1400px;
-  margin: 24px auto 0;
+.teams-overview {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.teams-overview__item {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  display: grid;
+  gap: 8px;
+}
+
+.teams-overview__label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-tech);
+}
+
+.teams-overview__value {
+  font-size: clamp(22px, 2.8vw, 30px);
+  line-height: 1;
+  font-family: var(--font-display);
+  color: #fff;
+}
+
+.teams-overview__meta {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #aeb4be;
+  font-family: var(--font-tech);
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
 }
 
@@ -333,6 +471,7 @@ const cardStyle = (team: Team) => ({
   border: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
+  text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -413,22 +552,6 @@ const cardStyle = (team: Team) => ({
   filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.65));
 }
 
-.team-card__dots {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 6px;
-  opacity: 0.4;
-}
-
-.team-card__dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--team-color);
-}
-
 .team-card__underline {
   position: absolute;
   bottom: 0;
@@ -450,6 +573,7 @@ const cardStyle = (team: Team) => ({
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
 }
 
 .team-card__name {
@@ -460,6 +584,7 @@ const cardStyle = (team: Team) => ({
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: color 0.2s ease;
+  color: #fff;
 }
 
 .team-card__base {
@@ -585,20 +710,24 @@ const cardStyle = (team: Team) => ({
   color: var(--team-color);
 }
 
-.team-card--empty {
-  align-items: stretch;
-}
-
-.team-card__body--empty {
-  padding: 20px;
+.teams-empty {
+  display: grid;
+  justify-items: center;
   gap: 10px;
+  padding: 26px;
+  text-align: center;
 }
 
-.team-card__placeholder {
+.teams-empty .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.teams-empty p {
   margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
+  max-width: 540px;
+  color: #c4cad4;
+  line-height: 1.6;
 }
 
 @keyframes pulse {
@@ -613,9 +742,71 @@ const cardStyle = (team: Team) => ({
   }
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1200px) {
   .teams-page {
-    padding: 36px 36px 56px;
+    padding: 32px 22px 52px;
+  }
+
+  .teams-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .teams-grid {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .teams-page {
+    padding: 26px 18px 44px;
+  }
+
+  .teams-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .teams-search {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .teams-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .teams-page {
+    padding: 20px 14px 36px;
+  }
+
+  .teams-hero {
+    gap: 14px;
+    padding-bottom: 14px;
+  }
+
+  .teams-hero__text h1 {
+    font-size: clamp(34px, 11vw, 44px);
+  }
+
+  .teams-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .teams-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .team-card__media {
+    height: 200px;
+  }
+
+  .team-card__stats {
+    grid-template-columns: 1fr;
   }
 }
 </style>

@@ -291,7 +291,8 @@ const answerLines = computed<AnswerLine[]>(() => {
     }
     // orphan cite line
     if (/^\[\d+\]$/.test(trimmed) && normalized.length > 0) {
-      normalized[normalized.length - 1] = `${normalized[normalized.length - 1].trim()} ${trimmed}`
+      const prev = normalized[normalized.length - 1] ?? ''
+      normalized[normalized.length - 1] = `${prev.trim()} ${trimmed}`
       continue
     }
     // remove <think> blocks if they slip through (defensive)
@@ -302,7 +303,8 @@ const answerLines = computed<AnswerLine[]>(() => {
   // build token lines, drop consecutive empty
   const out: AnswerLine[] = []
   for (const line of normalized) {
-    if (!line.trim() && out.length && !out[out.length - 1].raw.trim()) continue
+    const prev = out[out.length - 1]
+    if (!line.trim() && prev && !prev.raw.trim()) continue
     out.push({ raw: line, tokens: tokenizeAnswerLine(line) })
   }
   return out.filter((x) => x.raw.trim() !== '')
@@ -431,7 +433,8 @@ const askQuestion = async () => {
         lastIndex.value = payload?.index_version ?? null
 
         if (autoExpandFirst.value && sourceItems.value.length) {
-          openSourceId.value = sourceItems.value[0].id
+          const first = sourceItems.value[0]
+          if (first) openSourceId.value = first.id
         }
         return
       }

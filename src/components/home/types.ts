@@ -49,3 +49,9 @@ export type FastestLapDisplay = {
   teamLogo?: string
   car?: string
 }
+
+export type HeroPulse = {
+  label: string
+  value: string
+  detail: string
+}

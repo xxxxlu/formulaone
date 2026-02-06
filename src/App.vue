@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from './layout/header.vue'
 import Footer from './layout/footer.vue'
@@ -9,10 +9,39 @@ import { isRouting, setRouting } from './utils/loadingState'
 const route = useRoute()
 const loading = computed(() => isRouting.value)
 const showBackTop = ref(false)
+const scrollProgress = ref(0)
 const hideChrome = computed(() => route.name === 'christmas')
+let revealObserver: IntersectionObserver | null = null
 
-const handleScroll = () => {
+const updateViewportProgress = () => {
   showBackTop.value = window.scrollY > 200
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight
+  scrollProgress.value = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0
+}
+
+const revealElements = () => {
+  const targets = document.querySelectorAll<HTMLElement>('.f1-reveal:not(.is-visible)')
+  if (!targets.length) return
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    targets.forEach((el) => el.classList.add('is-visible'))
+    return
+  }
+
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          revealObserver?.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+    )
+  }
+
+  targets.forEach((el) => revealObserver?.observe(el))
 }
 
 const backToTop = () => {
@@ -22,18 +51,31 @@ const backToTop = () => {
 onMounted(() => {
   // ensure initial entry shows the loader briefly, then release
   setTimeout(() => setRouting(false), 1000)
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  handleScroll()
+  window.addEventListener('scroll', updateViewportProgress, { passive: true })
+  updateViewportProgress()
+  nextTick(revealElements)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', updateViewportProgress)
+  revealObserver?.disconnect()
+  revealObserver = null
 })
+
+watch(
+  () => route.fullPath,
+  () => {
+    nextTick(() => {
+      revealElements()
+      updateViewportProgress()
+    })
+  }
+)
 </script>
 
 <template>
   <div class="app-shell">
-    <div class="snow-overlay" aria-hidden="true">
+    <div v-if="!hideChrome" class="snow-overlay" aria-hidden="true">
       <div class="snow snow--near"></div>
       <div class="snow snow--far"></div>
     </div>
@@ -75,8 +117,16 @@ onBeforeUnmount(() => {
       </div>
     </transition>
 
+    <div v-if="!hideChrome" class="f1-scroll-track" aria-hidden="true">
+      <span class="f1-scroll-track__bar" :style="{ transform: `scaleX(${scrollProgress})` }"></span>
+    </div>
+
     <Header v-if="!hideChrome" />
-    <router-view></router-view>
+    <router-view v-slot="{ Component, route: currentRoute }">
+      <transition name="page-shift" mode="out-in">
+        <component :is="Component" :key="currentRoute.fullPath" />
+      </transition>
+    </router-view>
     <Footer v-if="!hideChrome" />
 
     <transition name="fade-up">
@@ -109,6 +159,26 @@ onBeforeUnmount(() => {
 .app-shell {
   position: relative;
   min-height: 100vh;
+}
+
+.f1-scroll-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 130;
+  background: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.f1-scroll-track__bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #00f3ff 0%, #7df7ff 45%, #ff003c 100%);
+  box-shadow: 0 0 14px rgba(0, 243, 255, 0.5);
 }
 
 .snow-overlay {
@@ -301,5 +371,23 @@ onBeforeUnmount(() => {
 .fade-up-leave-to {
   opacity: 0;
   transform: translateY(8px);
+}
+
+.page-shift-enter-active,
+.page-shift-leave-active {
+  transition: opacity 0.32s var(--ease-standard), transform 0.32s var(--ease-standard),
+    filter 0.32s var(--ease-standard);
+}
+
+.page-shift-enter-from {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0) scale(0.995);
+  filter: blur(6px);
+}
+
+.page-shift-leave-to {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+  filter: blur(4px);
 }
 </style>
